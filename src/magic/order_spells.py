@@ -1,6 +1,7 @@
 from effects import generic_effects
-from magic import Spell
 from pdcglobal import ST_ORDER, WHITE, d
+
+from .magic import Spell
 
 
 class OrderSpell(Spell):

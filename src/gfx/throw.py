@@ -1,5 +1,6 @@
-from gfx import GFX
 from pdcglobal import TILESIZE, line
+
+from .gfx import GFX
 
 # from pdcresource import Res
 

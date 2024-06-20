@@ -1,7 +1,8 @@
 from dv_effects import DazzleEffect
-from effect import Effect
 
 from pdcglobal import D_GENERIC, D_POISON, d
+
+from .effect import Effect
 
 
 class StunEffect(Effect):

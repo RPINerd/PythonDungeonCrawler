@@ -1,7 +1,7 @@
-from map import Map
-from populator import Populator
-
 from pdcglobal import DG_BSD
+
+from .map import Map
+from .populator import Populator
 
 
 class SADungeon(object):

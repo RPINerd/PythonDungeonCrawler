@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from gfx import GFX
+from gfx.gfx import GFX
 from pdcglobal import TILESIZE, d, line
 
 

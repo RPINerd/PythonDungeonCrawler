@@ -1,8 +1,8 @@
 # from actor import Actor
-from ai import AI
-
 # from key_mapping import MOVE_WAIT
 from pdcglobal import get_dis
+
+from .ai import AI
 
 
 class HenchmanAI(AI):

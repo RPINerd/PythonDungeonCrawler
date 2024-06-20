@@ -1,6 +1,7 @@
 # from actor import Actor
-from ai import AI
 from pdcglobal import get_dis
+
+from .ai import AI
 
 
 class SmarterAI(AI):

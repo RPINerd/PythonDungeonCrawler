@@ -2,8 +2,8 @@
     Set up the various RPG class choices for the player
 """
 
-import dungeon
 import magic
+from dungeon.populator import Populator
 
 
 class Class(object):
@@ -20,27 +20,27 @@ class Fighter(Class):
 
     def __init__(self, host):
         Class.__init__(self, host)
-        i = dungeon.Populator.create_item("Flail", "basic_weapons", 2)
+        i = Populator.create_item("Flail", "basic_weapons", 2)
         self.host.pick_up(i)
         self.host.equip(i)
 
-        c = dungeon.Populator.create_item("ChainmailShirt", "basic_armor", 2)
+        c = Populator.create_item("ChainmailShirt", "basic_armor", 2)
         self.host.pick_up(c)
         self.host.equip(c)
 
-        b = dungeon.Populator.create_item("Bow", "basic_weapons", 0)
+        b = Populator.create_item("Bow", "basic_weapons", 0)
         self.host.pick_up(b)
 
         for _ in range(0, 3):
-            r = dungeon.Populator.create_item("Arrows", "basic_weapons", 0)
+            r = Populator.create_item("Arrows", "basic_weapons", 0)
             self.host.pick_up(r)
 
         for _ in range(0, 3):
-            r = dungeon.Populator.create_item("Darts", "basic_weapons", 0)
+            r = Populator.create_item("Darts", "basic_weapons", 0)
             self.host.pick_up(r)
 
         # if hasattr(self.host.slot,'trousers'):
-        #    t = dungeon.Populator.create_item('Trousers', 'basic_stuff', 2)
+        #    t = Populator.create_item('Trousers', 'basic_stuff', 2)
         #    self.host.pick_up(t)
         #    self.host.equip(t)
         self.host.timer = 0
@@ -53,12 +53,12 @@ class Barbarian(Class):
 
     def __init__(self, host):
         Class.__init__(self, host)
-        i = dungeon.Populator.create_item("Axe", "basic_weapons", 25)
+        i = Populator.create_item("Axe", "basic_weapons", 25)
         self.host.pick_up(i)
         self.host.equip(i)
 
         if hasattr(self.host.slot, "trousers"):
-            t = dungeon.Populator.create_item("Trousers", "basic_stuff", 2)
+            t = Populator.create_item("Trousers", "basic_stuff", 2)
             self.host.pick_up(t)
             self.host.equip(t)
         self.host.timer = 0

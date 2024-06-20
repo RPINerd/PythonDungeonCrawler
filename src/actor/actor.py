@@ -1,8 +1,8 @@
 import pygame
-from hit_zones import HitZones
-from skills import Skills
 
-from ai import AI
+from actor.hit_zones import HitZones
+from actor.skills import Skills
+from ai.ai import AI
 from item import item as imod
 from item import item_types
 from key_mapping import (

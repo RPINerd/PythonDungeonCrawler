@@ -1,5 +1,6 @@
 from actor.actor import Actor
-from ai.ai import AI
+
+from .ai import AI
 
 # from key_mapping import *
 # from pdcglobal import *

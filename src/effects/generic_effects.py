@@ -1,6 +1,6 @@
-from effect import Effect
-
 from pdcglobal import D_ORDER, d
+
+from .effect import Effect
 
 
 class RegenerationEffect(Effect):

@@ -1,9 +1,9 @@
 # import copy
 
-from effect import Effect
-
 import dungeon
 from pdcglobal import D_ACID, D_COLD, D_FIRE, d
+
+from .effect import Effect
 
 
 class FloatingEyeGazeEffect(Effect):

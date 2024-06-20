@@ -1,6 +1,6 @@
 import random
 
-from actor import Humanoid
+from actor.actor import Humanoid
 from magic.cold_spells import FrostRay
 from magic.fire_spells import HeatRay
 from magic.generic_spells import Identify

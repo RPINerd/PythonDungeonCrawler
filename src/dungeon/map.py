@@ -1,8 +1,7 @@
 import copy
 import random
 
-import bsd
-
+import dungeon.bsd as bsd
 from pdcglobal import (
     DG_BSD,
     F_WALKABLE,

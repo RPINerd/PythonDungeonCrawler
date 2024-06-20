@@ -1,4 +1,3 @@
-from gfx import GFX
 from pdcglobal import (
     MOVE_DOWN,
     MOVE_DOWN_LEFT,
@@ -12,6 +11,8 @@ from pdcglobal import (
     line,
 )
 from pdcresource import Res
+
+from .gfx import GFX
 
 
 class ProjectileFX(GFX):

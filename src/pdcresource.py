@@ -20,8 +20,8 @@ class Res:
         self.res = self.load_image(name)
         _, _, w, h = self.res.get_rect()
         self.tiles = []
-        for y in range(0, h / tilesize):
-            for x in range(0, w / tilesize):
+        for y in range(0, int(h / tilesize)):
+            for x in range(0, int(w / tilesize)):
                 tile = pygame.Surface((tilesize, tilesize), depth=self.res)
                 chop_rect = (x * tilesize, y * tilesize, tilesize, tilesize)
                 tile.blit(self.res, (0, 0), chop_rect)

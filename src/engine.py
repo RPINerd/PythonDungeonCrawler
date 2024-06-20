@@ -657,7 +657,7 @@ class Engine(object):
         #    self.free_symbol(item.player_symbol)
 
     def get_id(self):
-        return self.__id_gen.next()
+        return next(self.__id_gen)
 
     def drawGFX(self, gfx):
         self.__gfx = gfx

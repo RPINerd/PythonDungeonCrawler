@@ -1,9 +1,10 @@
 class Att(object):
-    game=None
+    game = None
+
     def __init__(self, name, info, cost=30):
         self.cost = cost
         self.name = name
-        self.__info = info
+        self.__info__ = info
+
     def info(self):
-        return ['Current: %i'%(getattr(self.game.player,self.name.lower())),
-        'Cost: %i XP'%(self.cost)]
+        return ["Current: %i" % (getattr(self.game.player, self.name.lower())), "Cost: %i XP" % (self.cost)]

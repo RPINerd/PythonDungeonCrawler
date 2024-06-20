@@ -1,5 +1,6 @@
-import pygame
 import os
+
+import pygame
 
 # parts:
 # 0 -> full image
@@ -14,6 +15,7 @@ import os
 
 
 class Res:
+
     def __init__(self, name, tilesize):
         self.res = self.load_image(name)
         _, _, w, h = self.res.get_rect()
@@ -24,17 +26,19 @@ class Res:
                 chop_rect = (x * tilesize, y * tilesize, tilesize, tilesize)
                 tile.blit(self.res, (0, 0), chop_rect)
                 self.tiles.append(tile)
-                
+
     def get(self, no):
         return self.tiles[no]
-    
-    def get_subs(self, (no_part)):
-        if no_part == None: return pygame.Surface((0,0))
+
+    def get_subs(self, no_part):
+        if no_part is None:
+            return pygame.Surface((0, 0))
         no, part = no_part
         img = self.get(no)
-        if part == 0: return img
-        _, _, w, h = img.get_rect() 
-        
+        if part == 0:
+            return img
+        _, _, w, h = img.get_rect()
+
         if part == 1:
             sub = pygame.Surface((w / 2, h), depth=img)
             sub.blit(img, (0, 0), (0, 0, w / 2, h))
@@ -47,7 +51,6 @@ class Res:
         if part == 4:
             sub = pygame.Surface((w, h / 2), depth=img)
             sub.blit(img, (0, 0), (0, h / 2, w, h / 2))
-
         if part == 5:
             sub = pygame.Surface((w / 2, h / 2), depth=img)
             sub.blit(img, (0, 0), (0, 0, w / 2, h / 2))
@@ -60,19 +63,17 @@ class Res:
         if part == 8:
             sub = pygame.Surface((w / 2, h / 2), depth=img)
             sub.blit(img, (0, 0), (w / 2, h / 2, w / 2, h / 2))
-                                    
-        return sub    
-        
-        
-    
+
+        return sub
+
     def load_image(self, name):
         try:
-            image = pygame.image.load(os.path.join('gfx', name))
-        except pygame.error, message:
-            print 'Cannot load image:', name
-            raise SystemExit, message
+            image = pygame.image.load(os.path.join("gfx", name))
+        except pygame.error as message:
+            print(f"Cannot load image: {name}")
+            raise SystemExit.add_note(message)
 
         image = image.convert_alpha()
         image.set_alpha(255, pygame.RLEACCEL)
-        
+
         return image

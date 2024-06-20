@@ -1,15 +1,15 @@
-from pdcresource import *
-from pdcglobal import *
+from pdcglobal import ST_GENERIC, WHITE, line
+
 
 class Spell(object):
-    
+
     game = None
-    
-    def __init(self):
+
+    def __init__(self):
         self.phys_cost = 10
         self.mind_cost = 25
-        self.name = 'generic'
-        self.infotext = 'nothing'
+        self.name = "generic"
+        self.infotext = "nothing"
         self.color = WHITE
         self.type = ST_GENERIC
 
@@ -19,21 +19,21 @@ class Spell(object):
             poss.pop(0)
             for pos in poss:
                 actor = self.game.get_actor_at(pos)
-                if actor != None:
+                if actor is not None:
                     return actor
         else:
             return self.caster
         return None
-     
+
     def cast(self, caster):
         self.caster = caster
         self.game.wait_for_target(self.target_choosen)
-    
+
     def info(self):
-        l = ['PHY: %i MND: %i' % (self.phys_cost, self.mind_cost)]
-        if isinstance(self.infotext,str):
-            l.append(self.infotext)
+        lines = ["PHY: %i MND: %i" % (self.phys_cost, self.mind_cost)]
+        if isinstance(self.infotext, str):
+            lines.append(self.infotext)
         else:
-            for line in self.infotext:
-                l.append(line)
-        return l
+            for i in self.infotext:
+                lines.append(i)
+        return lines

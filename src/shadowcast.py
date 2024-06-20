@@ -1,15 +1,18 @@
-from pdcglobal import *
+from pdcglobal import F_BLOCKSIGHT, MT_FLAGS
+
 
 class sc(object):
     """Python implementation of Bjorn Bergstrom's excellent recursive shadowcasting FOV algorithm.
     taken from http://roguebasin.roguelikedevelopment.org"""
+
     # Multipliers for transforming coordinates to other octants:
     mult = [
-                [1, 0, 0, -1, -1, 0, 0, 1],
-                [0, 1, -1, 0, 0, -1, 1, 0],
-                [0, 1, 1, 0, 0, -1, -1, 0],
-                [1, 0, 0, 1, -1, 0, 0, -1]
-            ]
+        [1, 0, 0, -1, -1, 0, 0, 1],
+        [0, 1, -1, 0, 0, -1, 1, 0],
+        [0, 1, 1, 0, 0, -1, -1, 0],
+        [1, 0, 0, 1, -1, 0, 0, -1],
+    ]
+
     def __init__(self, map):
         self.data = map
         self.width, self.height = len(map[0]), len(map)
@@ -17,18 +20,20 @@ class sc(object):
         for i in range(self.height):
             self.light.append([0] * self.width)
         self.flag = 0
+
     def square(self, x, y):
         return self.data[x][y]
-    
+
     def blocked(self, x, y):
-        return (x < 0 or y < 0 or x >= self.width or y >= self.height or self.data[y][x][MT_FLAGS] & F_BLOCKSIGHT)
+        return x < 0 or y < 0 or x >= self.width or y >= self.height or self.data[y][x][MT_FLAGS] & F_BLOCKSIGHT
+
     def lit(self, x, y):
-        
         return self.light[y][x] == self.flag
-   
+
     def set_lit(self, x, y):
         if 0 <= x < self.width and 0 <= y < self.height:
             self.light[y][x] = self.flag
+
     def _cast_light(self, cx, cy, row, start, end, radius, xx, xy, yx, yy, id):
         "Recursive lightcasting function"
         if start < end:
@@ -64,17 +69,16 @@ class sc(object):
                         if self.blocked(X, Y) and j < radius:
                             # This is a blocking square, start a child scan:
                             blocked = True
-                            self._cast_light(cx, cy, j + 1, start, l_slope,
-                                             radius, xx, xy, yx, yy, id + 1)
+                            self._cast_light(cx, cy, j + 1, start, l_slope, radius, xx, xy, yx, yy, id + 1)
                             new_start = r_slope
             # Row is scanned; do next row unless last square was blocked:
             if blocked:
                 break
+
     def do_fov(self, x, y, radius):
         "Calculate lit squares from the given location and radius"
         self.flag += 1
         for oct in range(8):
-            self._cast_light(x, y, 1, 1.0, 0.0, radius,
-                             self.mult[0][oct], self.mult[1][oct],
-                             self.mult[2][oct], self.mult[3][oct], 0)
-
+            self._cast_light(
+                x, y, 1, 1.0, 0.0, radius, self.mult[0][oct], self.mult[1][oct], self.mult[2][oct], self.mult[3][oct], 0
+            )

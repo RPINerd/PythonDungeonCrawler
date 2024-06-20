@@ -1,65 +1,83 @@
-from pdcglobal import *
-from item import Item
+from item.item import Item
+from pdcglobal import (
+    I_AMMO,
+    I_ARMOR,
+    I_BOOTS,
+    I_GOLD,
+    I_HELMET,
+    I_SHIELD,
+    I_STUFF,
+    I_TROUSERS,
+    I_WEAPON,
+    WT_UNARMED,
+    cd,
+)
+
 
 class Armor(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_ARMOR
-        
+        Item.__init__(self, add)
+        self.type = I_ARMOR
+
+
 class Cloak(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_ARMOR
-        
+        Item.__init__(self, add)
+        self.type = I_ARMOR
+
+
 class Weapon(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_WEAPON
+        Item.__init__(self, add)
+        self.type = I_WEAPON
+
 
 class Unarmed(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_WEAPON
+        Item.__init__(self, add)
+        self.type = I_WEAPON
         self.skills.append(WT_UNARMED)
-        self.damage='1D3',lambda : cd(int(1), int(3))
-        #item.damage = value, lambda : cd(int(no), int(ey)) + int(add)
+        self.damage = "1D3", lambda: cd(int(1), int(3))
+        # item.damage = value, lambda : cd(int(no), int(ey)) + int(add)
+
+
 class Shield(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_SHIELD
+        Item.__init__(self, add)
+        self.type = I_SHIELD
+
 
 class Boots(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_BOOTS
+        Item.__init__(self, add)
+        self.type = I_BOOTS
+
 
 class Helmet(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_HELMET
+        Item.__init__(self, add)
+        self.type = I_HELMET
+
 
 class Trousers(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_TROUSERS
+        Item.__init__(self, add)
+        self.type = I_TROUSERS
+
 
 class Ammo(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_AMMO
-        
+        Item.__init__(self, add)
+        self.type = I_AMMO
+
+
 class Gold(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_GOLD
+        Item.__init__(self, add)
+        self.type = I_GOLD
+
 
 class Stuff(Item):
     def __init__(self, add):
-        Item.__init__(self,add)
-        self.type=I_STUFF
-
-        
-
-        
-
-        
+        Item.__init__(self, add)
+        self.type = I_STUFF

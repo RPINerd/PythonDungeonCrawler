@@ -9,17 +9,12 @@ from weakref import WeakKeyDictionary
 import pygame
 
 import att
-from actor import *
-from ai import *
 from camera import Camera
 from cursor import Cursor
-from dungeon import map, populator, sadungeon
 from eng_player_actions import PlayerActions
 from eng_state_worker import StateWorker
-from gfx import gfx, projectile, throw
-from items import item as imod
 from key_mapping import GAME_SAVE_QUIT, MOVE_WAIT, MOVES, PLAYER_ACTIONS
-from magic import magic
+from modules import *
 from pdcglobal import (
     BLACK,
     CHOOSE_STATES,
@@ -86,7 +81,7 @@ class Engine(object):
             self.__item_grid.append(iline)
 
         self.map = None
-        self.dungeon = sadungeon.DungeonsOfGogadan()
+        self.dungeon = DungeonsOfGogadan()
         self.quit_mes = QUIT
 
         self.stats = [
@@ -268,14 +263,14 @@ class Engine(object):
             r = self.camera.adjust(self.player.pos())
 
     def create_gold(self, amount, pos):
-        gold = populator.Populator.create_item("Gold", "basic_stuff", 0)
+        gold = Populator.create_item("Gold", "basic_stuff", 0)
         gold.amount = amount
         gold.set_pos(pos)
         self.add_item(gold)
 
     def summon_monster(self, caster, name, file, pos):
-        mon = populator.Populator.create_creature(name, file)
-        mon.ai = henchmanAI.HenchmanAI(mon)
+        mon = Populator.create_creature(name, file)
+        mon.ai = HenchmanAI(mon)
         mon.ai.friends.add(caster.id)
         caster.ai.friends.add(mon.id)
         mon.set_pos(pos)
@@ -289,7 +284,7 @@ class Engine(object):
         man.classkit = classkits[0][1](man)
         # from ai import simpleai
 
-        man.ai = henchmanAI.HenchmanAI(man)
+        man.ai = HenchmanAI(man)
         man.name = "Nigg Yshur"
         pos = self.get_free_adj(self.player.pos())
         man.set_pos(pos)
@@ -391,7 +386,7 @@ class Engine(object):
                     elif e.key == pygame.K_RETURN:
                         self.player = races[race][3](True, gender)
                         self.player.classkit = classkits[classkit][1](self.player)
-                        b = populator.Populator.create_item("TomeOfVileUmbrages", "tovu", 100)
+                        b = Populator.create_item("TomeOfVileUmbrages", "tovu", 100)
                         self.player.pick_up(b)
                         self.player.clear_surfaces()
                         self.player.timer = 0
@@ -475,7 +470,7 @@ class Engine(object):
         if victim is not None:
             t_pos = victim.pos()
         dir = attacker.locateDirection(t_pos)
-        graphic = throw.ThrowFX(dir, s_pos, t_pos, item)
+        graphic = ThrowFX(dir, s_pos, t_pos, item)
         self.drawGFX(graphic)
         item.set_pos(t_pos)
 
@@ -488,7 +483,7 @@ class Engine(object):
             t_pos = victim.pos()
 
         dir = attacker.locateDirection(t_pos)
-        graphic = projectile.ProjectileFX(dir, s_pos, t_pos)
+        graphic = ProjectileFX(dir, s_pos, t_pos)
         self.drawGFX(graphic)
 
         # while self.__gfx is not None:
@@ -920,16 +915,16 @@ class Engine(object):
         return self.__cur_stat_surf
 
     def __set_game_instance(self):
-        map.Map.game = self
+        Map.game = self
         Actor.game = self
-        imod.Item.game = self
-        ai.AI.game = self
+        Item.game = self
+        AI.game = self
         Camera.game = self
-        populator.Populator.game = self
-        magic.Spell.game = self
-        gfx.GFX.game = self
+        Populator.game = self
+        Spell.game = self
+        GFX.game = self
         att.Att.game = self
-        sadungeon.SADungeon.game = self
+        SADungeon.game = self
 
     def __draw_item_choose(self, surf, message):
         self.__render_text(surf, message, WHITE, (16, 20))

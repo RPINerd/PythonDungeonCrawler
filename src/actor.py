@@ -1,8 +1,10 @@
+import random
+
 import pygame
 
-from actor.hit_zones import HitZones
-from actor.skills import Skills
+import magic
 from ai.ai import AI
+from dungeon.populator import Populator
 from item import item as imod
 from item import item_types
 from key_mapping import (
@@ -16,6 +18,10 @@ from key_mapping import (
     MOVE_UP_RIGHT,
     MOVE_WAIT,
 )
+from magic.cold_spells import FrostRay
+from magic.fire_spells import HeatRay
+from magic.generic_spells import Identify
+from magic.order_spells import LesserHealing, Regeneration
 from pdcglobal import (
     I_AMMO,
     I_ARMOR,
@@ -25,6 +31,11 @@ from pdcglobal import (
     IF_MELEE,
     IF_RANGED,
     IF_SHIELD,
+    L_ABDOMEN,
+    L_ARMS,
+    L_CHEST,
+    L_HEAD,
+    L_LEGS,
     MM_WALK,
     TILESIZE,
     Debug,
@@ -711,3 +722,267 @@ class Humanoid(Actor):
             item.clear_surfaces()
         self.cur_surf = None
         Humanoid.tiles = None
+
+
+class Human(Humanoid):
+    """"""
+
+    desc = "was versatile and talented at every topic."
+
+    def __init__(self, add, gender=0):
+        Humanoid.__init__(self, add)
+        self.img_body = 0 + gender, 0
+        self.MOVE = 4
+
+
+class Alb(Humanoid):
+    """"""
+
+    desc = "was a quick and wiry person."
+
+    def __init__(self, add, gender=0):
+        Humanoid.__init__(self, add)
+        self.img_body = 10 + gender, 0
+        self.MOVE = 5
+
+
+class Naga(Humanoid):
+    """"""
+
+    desc = "was less talented in melee-weapons, but gifted in magic."
+
+    def __init__(self, add, gender=0):
+        Humanoid.__init__(self, add)
+        spell = random.choice([FrostRay, HeatRay, LesserHealing, Regeneration, Identify])
+        self.spells.append(spell())
+        self.MOVE = 3
+        del self.slot.__dict__["trousers"]
+        del self.slot.slots["trousers"]
+        del self.slot.__dict__["boots"]
+        del self.slot.slots["boots"]
+
+
+class Class(object):
+    """"""
+
+    def __init__(self, host):
+        self.host = host
+
+
+class Fighter(Class):
+    """"""
+
+    desc = "Thanks to unremittingly training, $$$ was skilled at all weapons."
+
+    def __init__(self, host):
+        Class.__init__(self, host)
+        i = Populator.create_item("Flail", "basic_weapons", 2)
+        self.host.pick_up(i)
+        self.host.equip(i)
+
+        c = Populator.create_item("ChainmailShirt", "basic_armor", 2)
+        self.host.pick_up(c)
+        self.host.equip(c)
+
+        b = Populator.create_item("Bow", "basic_weapons", 0)
+        self.host.pick_up(b)
+
+        for _ in range(0, 3):
+            r = Populator.create_item("Arrows", "basic_weapons", 0)
+            self.host.pick_up(r)
+
+        for _ in range(0, 3):
+            r = Populator.create_item("Darts", "basic_weapons", 0)
+            self.host.pick_up(r)
+
+        # if hasattr(self.host.slot,'trousers'):
+        #    t = Populator.create_item('Trousers', 'basic_stuff', 2)
+        #    self.host.pick_up(t)
+        #    self.host.equip(t)
+        self.host.timer = 0
+
+
+class Barbarian(Class):
+    """"""
+
+    desc = "Since his youth, $$$ clearly loved one weapon the most: the Axe."
+
+    def __init__(self, host):
+        Class.__init__(self, host)
+        i = Populator.create_item("Axe", "basic_weapons", 25)
+        self.host.pick_up(i)
+        self.host.equip(i)
+
+        if hasattr(self.host.slot, "trousers"):
+            t = Populator.create_item("Trousers", "basic_stuff", 2)
+            self.host.pick_up(t)
+            self.host.equip(t)
+        self.host.timer = 0
+
+
+class Priest(Class):
+    """"""
+
+    desc = "Since %%% birth, $$$ stood up for Law and Order."
+
+    def __init__(self, host):
+        Class.__init__(self, host)
+        self.host.timer = 0
+
+
+class Sorcerer(Class):
+    """"""
+
+    desc = "All %%% live $$$ tried to master the Elemental-Forces "
+
+    def __init__(self, host):
+        Class.__init__(self, host)
+        self.host.spells.append(magic.fire_spells.FireBall())
+        self.host.timer = 0
+
+
+class Necromancer(Class):
+    """"""
+
+    desc = "Allured by the Power of Chaos, $$$ was a fearsome Wizrad."
+
+    def __init__(self, host):
+        Class.__init__(self, host)
+        self.host.spells.append(magic.chaos_spells.CorpseDance())
+        self.host.spells.append(magic.chaos_spells.DrainLife())
+        self.host.timer = 0
+
+
+class Skills(object):
+    def __init__(self, host):
+
+        skills = {
+            "Flail": host.STR + host.DEX,
+            "Flail2H": host.STR + host.DEX,
+            "Sword": host.STR + host.DEX,
+            "Sword2H": host.STR + host.DEX,
+            "Axe": host.STR + host.DEX,
+            "Axe2H": host.STR + host.DEX,
+            "Polearm": host.STR + host.DEX,
+            "Polearm2H": host.STR + host.DEX,
+            "Hammer": host.STR + host.DEX,
+            "Hammer2H": host.STR + host.DEX,
+            "Rapier": host.STR + host.DEX,
+            "Dagger": host.STR + host.DEX,
+            "Spear": host.STR + host.DEX,
+            "Bow": host.DEX,
+            "Crossbow": host.DEX,
+            "Sling": host.DEX,
+            "Throwing": host.DEX,
+            "Dodge": host.DEX + 10 - host.SIZ,
+            "Resilence": host.CON + host.POW,
+            "Unarmed": host.STR + host.DEX,
+        }
+
+        for skill in skills:
+            self.__dict__[skill] = skills[skill]
+
+        self.__dict__["skills"] = skills
+        self.__dict__["host"] = host
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, state):
+        for item in state:
+            self.__dict__[item] = state[item]
+
+    def __getattr__(self, attr):
+        return self.__dict__[attr]
+
+    def __setattr__(self, attr, value):
+        self.__dict__[attr] = value
+
+
+class HitZones(object):
+    def __init__(self, host):
+
+        tot = host.SIZ + host.CON
+
+        # cur/max
+        zones = {
+            "L_Leg": (leg(tot), leg(tot), "left leg", L_LEGS),
+            "R_Leg": (leg(tot), leg(tot), "right leg", L_LEGS),
+            "L_Arm": (arm(tot), arm(tot), "left arm", L_ARMS),
+            "R_Arm": (arm(tot), arm(tot), "right arm", L_ARMS),
+            "Abdomen": (abdomen(tot), abdomen(tot), "abdomen", L_ABDOMEN),
+            "Chest": (chest(tot), chest(tot), "chest", L_CHEST),
+            "Head": (head(tot), head(tot), "head", L_HEAD),
+        }
+
+        for zone in zones:
+            self.__dict__[zone] = zones[zone]
+
+        self.__dict__["zones"] = zones
+        self.__dict__["host"] = host
+
+    def get_random_zone(self):
+        z = d(20)
+        if z <= 3:
+            return "R_Leg"
+        if z <= 6:
+            return "L_Leg"
+        if z <= 9:
+            return "Abdomen"
+        if z <= 12:
+            return "Chest"
+        if z <= 15:
+            return "R_Arm"
+        if z <= 18:
+            return "L_Arm"
+        return "Head"
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, state):
+        for item in state:
+            self.__dict__[item] = state[item]
+
+    def __getattr__(self, attr):
+        return self.__dict__[attr]
+
+    def __setattr__(self, attr, value):
+        self.__dict__[attr] = value
+
+
+def leg(tot):
+    tot += 4
+    return tot / 5
+
+
+def head(tot):
+    tot += 4
+    return tot / 5
+
+
+def arm(tot):
+    tot += 4
+    v = tot / 5 - 1
+    return max(v, 1)
+
+
+def chest(tot):
+    tot += 4
+    return tot / 5 + 2
+
+
+def abdomen(tot):
+    tot += 4
+    return tot / 5 + 1
+
+
+races = (("Human", 0, 1, Human), ("Naga", 16, 17, Naga), ("Alb", 10, 11, Alb))
+
+classkits = (
+    ("Fighter", Fighter),
+    ("Barbarian", Barbarian),
+    ("Sorcerer", Sorcerer),
+    ("Priest", Priest),
+    ("Necromancer", Necromancer),
+)

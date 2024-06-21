@@ -1,6 +1,6 @@
 import random
 
-from actor import *
+from actor import Actor
 from key_mapping import (
     MOVE_DOWN,
     MOVE_DOWN_LEFT,

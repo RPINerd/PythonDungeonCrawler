@@ -9,17 +9,15 @@ from weakref import WeakKeyDictionary
 import pygame
 
 import att
-from actor.actor import Actor
-from actor.classes import classkits
-from actor.races import races
-from ai import ai, henchmanAI
+from actor import *
+from ai import *
 from camera import Camera
 from cursor import Cursor
 from dungeon import map, populator, sadungeon
 from eng_player_actions import PlayerActions
 from eng_state_worker import StateWorker
 from gfx import gfx, projectile, throw
-from item import item as imod
+from items import item as imod
 from key_mapping import GAME_SAVE_QUIT, MOVE_WAIT, MOVES, PLAYER_ACTIONS
 from magic import magic
 from pdcglobal import (

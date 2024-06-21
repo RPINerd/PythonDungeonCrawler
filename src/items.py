@@ -2,12 +2,8 @@ import random
 
 import pygame
 
-from effects.av_effects import KillerbeePoisonEffect, YumuraPoisonEffect
-from effects.generic_effects import RegenerationEffect
-from magic.chaos_spells import FoulnessRay
-from magic.cold_spells import FrostRay
-from magic.generic_spells import Identify, LesserHaste
-from magic.order_spells import Healing, LesserHealing, Regeneration
+import effects
+import magic
 from pdcglobal import (
     D_GENERIC,
     I_AMMO,
@@ -275,37 +271,37 @@ def BookOfTOVU(item):
 
 def BookOfRegeneration(item):
     item.full_name += " of Regeneration"
-    item.spell = Regeneration
+    item.spell = magic.Regeneration
 
 
 def BookOfIdentify(item):
     item.full_name += " of Identify"
-    item.spell = Identify
+    item.spell = magic.Identify
 
 
 def BookOfLesserHealing(item):
     item.full_name += " of Lesser Healing"
-    item.spell = LesserHealing
+    item.spell = magic.LesserHealing
 
 
 def BookOfHealing(item):
     item.full_name += " of Healing"
-    item.spell = Healing
+    item.spell = magic.Healing
 
 
 def BookOfFoulnessRay(item):
     item.full_name += " of Foulness-Ray"
-    item.spell = FoulnessRay
+    item.spell = magic.FoulnessRay
 
 
 def BookOfFrostRay(item):
     item.full_name += " of Frost-Ray"
-    item.spell = FrostRay
+    item.spell = magic.FrostRay
 
 
 def BookOfLesserHaste(item):
     item.full_name += " of Lesser Haste"
-    item.spell = LesserHaste
+    item.spell = magic.LesserHaste
 
 
 def ReadBookOfTOVU(self, actor):
@@ -335,7 +331,7 @@ def PotionOfKillbeePoison(item):
 
 
 def DrinkPotionOfKillbeePoison(self, actor):
-    KillerbeePoisonEffect(actor, None)
+    effects.KillerbeePoisonEffect(actor, None)
 
 
 def PotionOfYumuraPoison(item):
@@ -343,7 +339,7 @@ def PotionOfYumuraPoison(item):
 
 
 def DrinkPotionOfYumuraPoison(self, actor):
-    YumuraPoisonEffect(actor, None)
+    effects.YumuraPoisonEffect(actor, None)
 
 
 def PotionOfRegeneration(item):
@@ -351,7 +347,7 @@ def PotionOfRegeneration(item):
 
 
 def DrinkPotionOfRegeneration(self, actor):
-    RegenerationEffect(actor, None)
+    effects.RegenerationEffect(actor, None)
 
 
 def PotionOfEndurance(item):

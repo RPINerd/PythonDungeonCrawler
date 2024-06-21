@@ -1,7 +1,7 @@
 import random
 
-from effects import generic_effects
-from gfx.spell_fx import BallFX, RayFX
+import effects
+import gfx
 from pdcglobal import (
     BLACK,
     BLUE,
@@ -79,7 +79,7 @@ class FoulnessRay(ChaosSpell):
         if target is None:
             self.game.shout("Your spell fizzles")
         else:
-            fx = RayFX(BLACK, GREEN, self.caster.pos(), target.pos())
+            fx = gfx.RayFX(BLACK, GREEN, self.caster.pos(), target.pos())
             self.game.drawGFX(fx)
             amount = d(self.caster.mind / 20) + self.caster.mind / 20
             self.game.do_damage(self.caster, amount / 2, D_CHAOS)
@@ -118,7 +118,7 @@ class DrainLife(ChaosSpell):
         if target is None:
             self.game.shout("Your spell fizzles")
         else:
-            fx = RayFX(BLACK, GREEN, self.caster.pos(), target.pos())
+            fx = gfx.RayFX(BLACK, GREEN, self.caster.pos(), target.pos())
             self.game.drawGFX(fx)
             amount = d(self.caster.mind / 20) + self.caster.mind / 20
             self.game.do_damage(self.caster, -amount / 2, D_CHAOS)
@@ -146,7 +146,7 @@ class FrostRay(ColdSpell):
         if target is None:
             self.game.shout("Your spell fizzles")
         else:
-            fx = RayFX(WHITE, BLUE, self.caster.pos(), target.pos())
+            fx = gfx.RayFX(WHITE, BLUE, self.caster.pos(), target.pos())
             self.game.drawGFX(fx)
             amount = d(self.caster.mind / 20) + self.caster.mind / 10 + 2
             self.game.do_damage(target, amount, D_COLD, self.caster)
@@ -171,7 +171,7 @@ class FireBall(FireSpell):
     def target_choosen(self, pos):
 
         radius = 1 + (self.caster.mind - 100) / 50
-        fx = BallFX(RED, YELLOW, self.caster.pos(), pos, radius)
+        fx = gfx.BallFX(RED, YELLOW, self.caster.pos(), pos, radius)
         self.game.drawGFX(fx)
         actors = self.caster.game.get_all_srd_actors(pos, radius, True)
         for act in actors:
@@ -193,7 +193,7 @@ class HeatRay(FireSpell):
         if target is None:
             self.game.shout("Your spell fizzles")
         else:
-            fx = RayFX(RED, YELLOW, self.caster.pos(), target.pos())
+            fx = gfx.RayFX(RED, YELLOW, self.caster.pos(), target.pos())
             self.game.drawGFX(fx)
             amount = d(self.caster.mind / 20) + self.caster.mind / 10 + 3
             self.game.do_damage(target, amount, D_FIRE, self.caster)
@@ -271,7 +271,7 @@ class Regeneration(OrderSpell):
             self.game.shout("Your spell fizzles")
         else:
             self.game.shout("%s regenerate %s" % (self.caster.name, target.name))
-            r = generic_effects.RegenerationEffect(target, self.caster)
+            r = effects.RegenerationEffect(target, self.caster)
             r.tick()
 
 

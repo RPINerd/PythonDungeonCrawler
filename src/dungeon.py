@@ -2,6 +2,8 @@ import copy
 import os
 import random
 
+import dungeon
+import items
 from actor import Actor
 from pdcglobal import (
     DG_BSD,
@@ -236,7 +238,7 @@ class Populator(object):
                                 if "Read" + p in globals():
                                     item.read = globals()["Read" + p]
                                 else:
-                                    item.read = suf_books.ReadGenericBook
+                                    item.read = items.ReadGenericBook
                             if item.flags & IF_DRINKABLE:
                                 item.drink = globals()["Drink" + p]
                     elif attr == "amount":
@@ -466,16 +468,16 @@ class Map(object):
             #! LOOK AWAY!! BAD, BAD CODE!!
             i = 0
             array = None
-            r1 = bsd.Room(0, 0, w, h)
-            bsd.split(r1, s)
+            r1 = dungeon.Room(0, 0, w, h)
+            dungeon.split(r1, s)
             while array is None and i < 20:
                 i += 1
                 try:
-                    array = bsd.create(r1)
+                    array = dungeon.create(r1)
                 except Exception:
                     array = None
-                    r1 = bsd.Room(0, 0, w, h)
-                    bsd.split(r1, s)
+                    r1 = dungeon.Room(0, 0, w, h)
+                    dungeon.split(r1, s)
 
             if array is None:
                 raise "Argh!! Bad code rising!"

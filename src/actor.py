@@ -2,11 +2,10 @@ import random
 
 import pygame
 
+import ai
+import dungeon
+import items
 import magic
-from ai.ai import AI
-from dungeon.populator import Populator
-from item import item as imod
-from item import item_types
 from key_mapping import (
     MOVE_DOWN,
     MOVE_DOWN_LEFT,
@@ -18,10 +17,6 @@ from key_mapping import (
     MOVE_UP_RIGHT,
     MOVE_WAIT,
 )
-from magic.cold_spells import FrostRay
-from magic.fire_spells import HeatRay
-from magic.generic_spells import Identify
-from magic.order_spells import LesserHealing, Regeneration
 from pdcglobal import (
     I_AMMO,
     I_ARMOR,
@@ -74,7 +69,7 @@ class Actor(object):
         self.move_mode = MM_WALK
 
         self.timer = 0
-        self.ai = AI(self)
+        self.ai = ai.AI(self)
 
         self.gold = 0
         self.xp_value = 25
@@ -107,7 +102,7 @@ class Actor(object):
         self.armor = []
         self.weapon = None
         self.ammo = None
-        self.unarmed_weapon = item_types.Unarmed(False)
+        self.unarmed_weapon = items.Unarmed(False)
         self.unconscious = False
         self.prone = False
 
@@ -428,7 +423,7 @@ class Actor(object):
             self.game.game_over()
 
     def __drop_corpse(self):
-        imod.Corpse(self)
+        items.Corpse(self)
 
     def equip_melee(self):
         melee_weapons = []
@@ -753,7 +748,7 @@ class Naga(Humanoid):
 
     def __init__(self, add, gender=0):
         Humanoid.__init__(self, add)
-        spell = random.choice([FrostRay, HeatRay, LesserHealing, Regeneration, Identify])
+        spell = random.choice([magic.FrostRay, magic.HeatRay, magic.LesserHealing, magic.Regeneration, magic.Identify])
         self.spells.append(spell())
         self.MOVE = 3
         del self.slot.__dict__["trousers"]
@@ -776,23 +771,23 @@ class Fighter(Class):
 
     def __init__(self, host):
         Class.__init__(self, host)
-        i = Populator.create_item("Flail", "basic_weapons", 2)
+        i = dungeon.Populator.create_item("Flail", "basic_weapons", 2)
         self.host.pick_up(i)
         self.host.equip(i)
 
-        c = Populator.create_item("ChainmailShirt", "basic_armor", 2)
+        c = dungeon.Populator.create_item("ChainmailShirt", "basic_armor", 2)
         self.host.pick_up(c)
         self.host.equip(c)
 
-        b = Populator.create_item("Bow", "basic_weapons", 0)
+        b = dungeon.Populator.create_item("Bow", "basic_weapons", 0)
         self.host.pick_up(b)
 
         for _ in range(0, 3):
-            r = Populator.create_item("Arrows", "basic_weapons", 0)
+            r = dungeon.Populator.create_item("Arrows", "basic_weapons", 0)
             self.host.pick_up(r)
 
         for _ in range(0, 3):
-            r = Populator.create_item("Darts", "basic_weapons", 0)
+            r = dungeon.Populator.create_item("Darts", "basic_weapons", 0)
             self.host.pick_up(r)
 
         # if hasattr(self.host.slot,'trousers'):
@@ -809,12 +804,12 @@ class Barbarian(Class):
 
     def __init__(self, host):
         Class.__init__(self, host)
-        i = Populator.create_item("Axe", "basic_weapons", 25)
+        i = dungeon.Populator.create_item("Axe", "basic_weapons", 25)
         self.host.pick_up(i)
         self.host.equip(i)
 
         if hasattr(self.host.slot, "trousers"):
-            t = Populator.create_item("Trousers", "basic_stuff", 2)
+            t = dungeon.Populator.create_item("Trousers", "basic_stuff", 2)
             self.host.pick_up(t)
             self.host.equip(t)
         self.host.timer = 0

@@ -284,7 +284,7 @@ class Actor(object):
 
     def drink(self, item):
         """
-        he Actor drinks the given Item
+        The Actor drinks the given Item
         """
         self.items.remove(item)
         self.game.free_symbol(item.player_symbol)

@@ -314,13 +314,13 @@ class Engine(object):
         name = ""
         title = "He"
         title2 = "His"
-        story = [
+        stories = [
             "This is the incredible story of our hero",
             "Long time ago, there was a hero named",
             "There once was a time, long ago, when",
         ]
 
-        s = random.choice(story)
+        story = random.choice(stories)
 
         while not OK:
             self.screen.fill(BLACK)
@@ -335,7 +335,7 @@ class Engine(object):
             self.__render_text(self.screen, name, WHITE, ((73, 170)))
 
             y = 100
-            self.__render_text(self.screen, s, WHITE, ((145, y)))
+            self.__render_text(self.screen, story, WHITE, ((145, y)))
             self.__render_text(self.screen, name, GREEN, ((395, y)))
             y += 20
             self.__render_text(self.screen, "the", WHITE, ((145, y)))
@@ -457,18 +457,18 @@ class Engine(object):
         return valid
 
     def get_range_target(self, cpos, tpos):
-        return self.get_actor_at(tpos)
 
-    #        if cpos != tpos:
-    #            poss = line(cpos[0], cpos[1], tpos[0], tpos[1])
-    #            poss.pop(0)
-    #            for pos in poss:
-    #                actor = self.get_actor_at(pos)
-    #                if actor is not None:
-    #                    return actor
-    #        else:
-    #            return self.caster
-    #        return None
+        # if cpos != tpos:
+        #     poss = line(cpos[0], cpos[1], tpos[0], tpos[1])
+        #     poss.pop(0)
+        #     for pos in poss:
+        #         actor = self.get_actor_at(pos)
+        #         if actor is not None:
+        #             return actor
+        # else:
+        #     return self.caster
+        # return None
+        return self.get_actor_at(tpos)
 
     def throw_item(self, attacker, item, target_pos):
         t_pos = target_pos
@@ -668,18 +668,21 @@ class Engine(object):
             self._world_draw()
 
     def _main_loop(self):
+
         while not self.__quit_loop:
             self.__clock.tick(40)
             self._world_move()
             self._world_draw()
             self._world_input()
         #            print(self.clock.get_fps())
+
         self.std_font = None
         self.__clock = None
         self.__cur_stat_surf = None
         self.__last_id = self.__id_gen.next()
         self.__id_gen = None
         self.__clear_surfaces()
+
         return self.quit_mes
 
     def _world_input(self):
@@ -718,8 +721,8 @@ class Engine(object):
                     for S in gc.get_referrers(pygame.Surface):
                         if isinstance(S, pygame.Surface):
                             print(S)
-
                     print(gc.get_referrers(pygame.Surface))
+
                 if e.key == pygame.K_F6:
                     self.create_humanoid()
                 # <<< cheat keys ---

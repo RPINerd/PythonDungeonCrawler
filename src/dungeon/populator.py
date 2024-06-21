@@ -297,7 +297,7 @@ class Populator(object):
     def findAll(stuff):
         actors = []
         for line in stuff:
-            if line.strip() == "":
+            if line.strip() == "" or line.startswith("#"):
                 continue
             if line[0] == "*":
                 actors.append(line[1:])

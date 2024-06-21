@@ -19,7 +19,7 @@ TILESIZE = 32
 
 MES_SYS = False
 
-# colors
+# Colors
 WHITE = 255, 255, 255
 GREEN = 0, 255, 0
 BLACK = 0, 0, 0
@@ -27,15 +27,16 @@ BLUE = 80, 80, 255
 RED = 255, 0, 0
 PURPLE = 255, 0, 255
 YELLOW = 255, 255, 0
-# maptiles
+
+# Maptiles
 MT_INDEX = 0
 MT_IMAGE = 1
 MT_FLAGS = 2
 
-# map_types
+# Map_types
 DG_BSD = 0
 
-# item_types
+# Item_types
 I_VOID = 0x0
 I_WEAPON = 0x1
 I_SHIELD = 0x2
@@ -49,14 +50,14 @@ I_TROUSERS = 0x100
 I_AMMO = 0x200
 I_CORPSE = 0x400
 
-# spell-types
+# Spell-types
 ST_GENERIC = 1
 ST_CHAOS = 2
 ST_ORDER = 4
 ST_FIRE = 8
 ST_COLD = 16
 
-# damage_types
+# Damage_types
 D_GENERIC = 0x1
 D_FIRE = 0x2
 D_COLD = 0x4
@@ -67,7 +68,8 @@ D_PIERCE = 0x40
 D_BLUDGE = 0x80
 D_SLASH = 0x100
 D_POISON = 0x200
-# game_states
+
+# Game_states
 S_RUN = 1
 S_PLAYER_PICK_UP = 2
 S_PLAYER_EQUIP = 3
@@ -108,23 +110,24 @@ STATE_WORKER = {
     S_PLAYER_STATS: "stats",
     S_PLAYER_CHOOSE_THROW: "throw",
 }
-# quit messages
+
+# Quit messages
 QUIT = 1
 SAVE = 2
 
-# move modes, have to be like map_tiles
+# Move modes, have to be like map_tiles
 MM_VOID = 0
 MM_WALK = 1
 MM_FLY = 2
 
-# weapon armor locations
+# Weapon armor locations
 L_ARMS = 0x1
 L_CHEST = 0x2
 L_ABDOMEN = 0x4
 L_LEGS = 0x8
 L_HEAD = 0x10
 
-# weapon skills
+# Weapon skills
 WT_FLAIL = "Flail"
 WT_FLAIL2H = "Flail2H"
 WT_SWORD = "Sword"
@@ -142,7 +145,8 @@ WT_CROSSBOW = "Crossbow"
 WT_SLING = "Sling"
 WT_THROWING = "Throwing"
 WT_UNARMED = "Unarmed"
-# item-flags
+
+# Item-flags
 IF_EQUIPABLE = 0x1
 IF_DRINKABLE = 0x2
 IF_EATABLE = 0x4
@@ -164,7 +168,7 @@ IF_DART = 0x20000
 IF_FIRES_DART = 0x40000
 IF_SHIELD = 0x80000
 
-# map-tile flags
+# Map-tile flags
 F_WALKABLE = 0x1
 F_FLYABLE = 0x2
 # F_SWIMABLE = 0x4

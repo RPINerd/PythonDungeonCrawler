@@ -9,6 +9,7 @@ from weakref import WeakKeyDictionary
 import pygame
 
 import att
+import global_export
 from camera import Camera
 from cursor import Cursor
 from eng_player_actions import PlayerActions
@@ -108,6 +109,9 @@ class Engine(object):
         c = "abcdefghijklmonpqrstuvwxyz"
         for s in c:
             self._symbols.append(s)
+
+        # Push the variables to the globals() scope
+        # global_export.export()
 
     def call_pl_item_throw(self):
         self.__player_actions.throw_fire()

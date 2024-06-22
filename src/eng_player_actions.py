@@ -1,26 +1,4 @@
-from pdcglobal import (
-    F_SC_DOWN,
-    F_SC_UP,
-    IF_DRINKABLE,
-    IF_EQUIPABLE,
-    IF_IDENTIFIED,
-    IF_RANGED,
-    IF_READABLE,
-    MT_FLAGS,
-    S_PLAYER_CAST,
-    S_PLAYER_CHOOSE_THROW,
-    S_PLAYER_CURSOR,
-    S_PLAYER_DRINK,
-    S_PLAYER_DROP,
-    S_PLAYER_EQUIP,
-    S_PLAYER_IDENTIFY,
-    S_PLAYER_PICK_UP,
-    S_PLAYER_READ,
-    S_PLAYER_STATS,
-    S_PLAYER_TAKE_OFF,
-    ammo_fits_weapon,
-    get_chars,
-)
+from pdcglobal import *
 
 # TODO why is gen = get_chars() used in every function?
 

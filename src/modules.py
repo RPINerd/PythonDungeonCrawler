@@ -16,69 +16,71 @@ from key_mapping import (
     MOVE_WAIT,
     MOVES,
 )
-from pdcglobal import (
-    BLACK,
-    BLUE,
-    D_ACID,
-    D_CHAOS,
-    D_COLD,
-    D_FIRE,
-    D_GENERIC,
-    D_ORDER,
-    D_POISON,
-    DG_BSD,
-    F_WALKABLE,
-    GREEN,
-    I_AMMO,
-    I_ARMOR,
-    I_BOOTS,
-    I_CORPSE,
-    I_GOLD,
-    I_HELMET,
-    I_SHIELD,
-    I_STUFF,
-    I_TROUSERS,
-    I_VOID,
-    I_WEAPON,
-    IF_DRINKABLE,
-    IF_EATABLE,
-    IF_FIRES_DART,
-    IF_IDENTIFIED,
-    IF_MELEE,
-    IF_RANGED,
-    IF_READABLE,
-    IF_SHIELD,
-    L_ABDOMEN,
-    L_ARMS,
-    L_CHEST,
-    L_HEAD,
-    L_LEGS,
-    MAP_TILE_LIST,
-    MM_WALK,
-    MT_FLAGS,
-    MT_IMAGE,
-    MT_INDEX,
-    PURPLE,
-    RED,
-    ST_GENERIC,
-    ST_ORDER,
-    TILESIZE,
-    WHITE,
-    WT_UNARMED,
-    YELLOW,
-    Debug,
-    MAP_TILE_down,
-    MAP_TILE_up,
-    ammo_fits_weapon,
-    cd,
-    d,
-    get_combat_actions,
-    get_damage_mod,
-    get_dis,
-    get_new_pos,
-    r2d6,
-    r4d6,
-)
+
+# from pdcglobal import (
+#     BLACK,
+#     BLUE,
+#     D_ACID,
+#     D_CHAOS,
+#     D_COLD,
+#     D_FIRE,
+#     D_GENERIC,
+#     D_ORDER,
+#     D_POISON,
+#     DG_BSD,
+#     F_WALKABLE,
+#     GREEN,
+#     I_AMMO,
+#     I_ARMOR,
+#     I_BOOTS,
+#     I_CORPSE,
+#     I_GOLD,
+#     I_HELMET,
+#     I_SHIELD,
+#     I_STUFF,
+#     I_TROUSERS,
+#     I_VOID,
+#     I_WEAPON,
+#     IF_DRINKABLE,
+#     IF_EATABLE,
+#     IF_FIRES_DART,
+#     IF_IDENTIFIED,
+#     IF_MELEE,
+#     IF_RANGED,
+#     IF_READABLE,
+#     IF_SHIELD,
+#     L_ABDOMEN,
+#     L_ARMS,
+#     L_CHEST,
+#     L_HEAD,
+#     L_LEGS,
+#     MAP_TILE_LIST,
+#     MM_WALK,
+#     MT_FLAGS,
+#     MT_IMAGE,
+#     MT_INDEX,
+#     PURPLE,
+#     RED,
+#     ST_GENERIC,
+#     ST_ORDER,
+#     TILESIZE,
+#     WHITE,
+#     WT_UNARMED,
+#     YELLOW,
+#     Debug,
+#     MAP_TILE_down,
+#     MAP_TILE_up,
+#     ammo_fits_weapon,
+#     cd,
+#     d,
+#     get_combat_actions,
+#     get_damage_mod,
+#     get_dis,
+#     get_new_pos,
+#     r2d6,
+#     r4d6,
+# )
+from pdcglobal import *
 from pdcresource import Res
 
 VERTICAL = 0
@@ -1465,7 +1467,10 @@ class Populator(object):
                     elif attr == "flags":
                         flags = value.split(":")
                         for flag in flags:
-                            item.flags |= globals()[flag]
+                            try:
+                                item.flags |= globals()[flag]
+                            except KeyError:
+                                pass
                     elif attr == "av_fx":
                         value = random.choice(value.split(":"))
                         fx, ch = value.split(",")
@@ -1500,7 +1505,10 @@ class Populator(object):
                         item.amount += random.randint(int(min), int(max))
                         item.name = str(item.amount) + " " + item.name
                     elif attr == "dt":
-                        item.damage_type = globals()[value]
+                        try:
+                            item.damage_type = globals()[value]
+                        except KeyError:
+                            pass
                     elif attr == "info":
                         item.infotext = random.choice(value.split(":"))
                         # str/dex=11/9
@@ -1523,6 +1531,7 @@ class Populator(object):
                         # skill=WT_AXE
                     elif attr == "skill":
                         for skill in value.split(":"):
+
                             item.skills.append(globals()[skill])
                     elif attr == "locations":
                         locs = value.split(",")

@@ -1,19 +1,27 @@
 version = 1
+revision = 3
 requires-python = ">=3.13"
 
 [[package]]
 name = "pygame-ce"
-version = "2.5.3"
+version = "2.5.6"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/aa/4b/c08d748c8b082cee786e09b65a126d391c39b28dc75e3cea036b4b47b9dd/pygame_ce-2.5.3.tar.gz", hash = "sha256:dc04f0bf1a270a84eb371556298a9902b9c4ab08137c9dd10ef03fa4e7fcbfed", size = 6987675 }
+sdist = { url = "https://files.pythonhosted.org/packages/f1/a0/8199f0e96f43d94b79a74116a20b4937648bd26117e11d8994b1169a9120/pygame_ce-2.5.6.tar.gz", hash = "sha256:d3d019309d1e76fd19978b01753e8576bd76c66411ac7a4885785f95e68dc261", size = 5901071, upload-time = "2025-10-19T13:09:06.225Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2c/10/85e3a06b5b3dee5770e3ccb1d78ef629a4d220df14c5ca95774b30562241/pygame_ce-2.5.3-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:6a60622da82b16ebb5da95bd6f3a6fc41d312ec0505c9333ec0eeaed74c78123", size = 13712664 },
-    { url = "https://files.pythonhosted.org/packages/7f/dd/d3e6b15887eaf327594b63cd91fda96b3011d21a79368df4d82bbf23d4ac/pygame_ce-2.5.3-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:4326d7914a2ff8eea987bb4d16a1caa9a65921308eeb26c6d1f66cd6a1a5a930", size = 12965944 },
-    { url = "https://files.pythonhosted.org/packages/b9/e6/c7f80dd888a05f2290cc7ef0e492cca48cded0bf34073e57405e9757d35e/pygame_ce-2.5.3-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e2d25dd15fffc0e0e528d41941943b3775874aa66e171a5e8f86845fbc93518f", size = 13588585 },
-    { url = "https://files.pythonhosted.org/packages/c2/65/ad9db36d76ed4706f547c957f127beb30f60fe76ccc8da8cbc4f364b015d/pygame_ce-2.5.3-cp313-cp313-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:4f0c0e34008165b93a543d5ce526f8d6459662779c2f9ddc77ef3446329b2cc6", size = 14129006 },
-    { url = "https://files.pythonhosted.org/packages/e5/96/e33fad39c931805927b723519607e4b0d8ecec4690541d265a9141e19734/pygame_ce-2.5.3-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c3ccb1f170cc3fd52d4c4c8575e29689b90b04db089b3c3cbb331955fdde244f", size = 13765876 },
-    { url = "https://files.pythonhosted.org/packages/6a/d3/6c968e7044f47ddcc277fc6790c64b0cf2f1f10c3ae5b07fe8c6b458a870/pygame_ce-2.5.3-cp313-cp313-win32.whl", hash = "sha256:6ed3cc5b1c1c2580579569f76b2109843429cc66ca68e8bc7d9e0eb4224cae00", size = 11064408 },
-    { url = "https://files.pythonhosted.org/packages/32/ce/d6dae18f3c3ee07a80054145973ed1da4c7b413eab03c6008b81b42ecb5b/pygame_ce-2.5.3-cp313-cp313-win_amd64.whl", hash = "sha256:308f432559ae60ad04316777792d49df1f84f22bbb67a374a38ee15e8d97bdba", size = 11620106 },
+    { url = "https://files.pythonhosted.org/packages/fd/c4/b2a2b259d05ea90840d62b2dd61b5005d891fd82fde7e05f59ecc3a9de8f/pygame_ce-2.5.6-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:a83710528f2a90a026fca9caee390779842d5486ca3d48d4d1213060e5d41083", size = 12478496, upload-time = "2025-10-19T13:08:07.499Z" },
+    { url = "https://files.pythonhosted.org/packages/33/1d/8c14e5789fb0b4a7a8b6817b46690362f072da6c8307140de10f70fbf588/pygame_ce-2.5.6-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:971b86e48acdf37aaf9782560088c0949ca7ec3aea33827c74f4d4c4bc04c367", size = 11722973, upload-time = "2025-10-19T13:08:09.552Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/fd/255b8233c690a68d3b68d299868fd51b5f6f509ae67453b6c21c3e27330a/pygame_ce-2.5.6-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:92050fd16b62b20779b6ec2fb867bc8261e5499be967ed2aa7ff6a76b7735791", size = 12396847, upload-time = "2025-10-19T13:08:11.808Z" },
+    { url = "https://files.pythonhosted.org/packages/79/aa/af9d6ac848670c3ecc96c7dc0c91cff43e5d9b6605a9c208a45fa570d50e/pygame_ce-2.5.6-cp313-cp313-manylinux2014_i686.manylinux_2_17_i686.whl", hash = "sha256:45b01f49d35dbc8a66bbbcd06ab83312625850bcc2d9ae528b5b15130b733a43", size = 12934541, upload-time = "2025-10-19T13:08:14.406Z" },
+    { url = "https://files.pythonhosted.org/packages/61/28/b13cc306693e917b9a4b746ccad2615fa43d8f4f2373e28104edc33f6f8f/pygame_ce-2.5.6-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:d811bba090fbb10d6a1c4d6917350da5a6a585630605833fa91499480b72bfcf", size = 12552091, upload-time = "2025-10-19T13:08:16.738Z" },
+    { url = "https://files.pythonhosted.org/packages/15/28/bae79f3e5a862838e297f5725b52777781fa9507872321444afec31158e1/pygame_ce-2.5.6-cp313-cp313-win32.whl", hash = "sha256:283c7dc231387d05b294b2f72513bd767af91277a64900d10f4efb0b731f4d13", size = 9843196, upload-time = "2025-10-19T13:08:18.708Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/d9/1d16eff301bda4b22d1d19eda966cfbc9bf174648e4af85dee8c5ffb72cf/pygame_ce-2.5.6-cp313-cp313-win_amd64.whl", hash = "sha256:c38f17313b27ad97f0578ba863972b6e1fe22b1ec8568af6c7785b5bd55d21e1", size = 10422176, upload-time = "2025-10-19T13:08:20.985Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/7a/085e270baa9266ee2c0fb2a9adcaf00fc7ff33ce9025a099623437f8ddc9/pygame_ce-2.5.6-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:e341d53222fc5749a5fda1c331d9f167f2f90050eacc0c636d5f576791497d2e", size = 12485715, upload-time = "2025-10-19T13:08:23.051Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/c6/662f002804c5cd87384e7ffc5c9cbf9cc480b5e81ff18a6b98b454067abb/pygame_ce-2.5.6-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:fda10bdba288386850b0a4c4cc22c5073efe667cd6a7426fb9f54203219f84dd", size = 11724914, upload-time = "2025-10-19T13:08:25.197Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/c7/147bfaa1be052c1a6db7f1d062296e23ce03c8ea8d136bf478fccaed456c/pygame_ce-2.5.6-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:6889bb8a38f5d80c3f45c58480fa069cc94c07cf679b20a23e925e27f129ce2e", size = 12401943, upload-time = "2025-10-19T13:08:27.285Z" },
+    { url = "https://files.pythonhosted.org/packages/23/03/1d07c3db18cee2ef4d478403c4c11d0486ff267f91ad6e3104478064207b/pygame_ce-2.5.6-cp314-cp314-manylinux2014_i686.manylinux_2_17_i686.whl", hash = "sha256:ed1337e78cc0d3c1ee205fdf99e0b77237a2958119a6c9b03758a138889e00fd", size = 12934781, upload-time = "2025-10-19T13:08:29.329Z" },
+    { url = "https://files.pythonhosted.org/packages/3a/98/e5cd3053eac63d6a2622c654d4b09977375939beda34d203f064dac5dfd9/pygame_ce-2.5.6-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:266f976feb1a61bf19163416897189e6e7a8f78c362576a0afa214ffb7f1d18e", size = 12553880, upload-time = "2025-10-19T13:08:31.833Z" },
+    { url = "https://files.pythonhosted.org/packages/58/a9/90b806a7bb24bdea638603ff6c3dc0debc8e29012ae389172943579761c7/pygame_ce-2.5.6-cp314-cp314-win32.whl", hash = "sha256:c73ce70c63ab45f778fdc9d10d27077f9cfc49d1fa4ea1ae0e5eca514b47b683", size = 9975637, upload-time = "2025-10-19T13:08:34.417Z" },
+    { url = "https://files.pythonhosted.org/packages/87/1b/d9f180e142273dcef180ad3274213eba13ad76f335434979e584fbd57278/pygame_ce-2.5.6-cp314-cp314-win_amd64.whl", hash = "sha256:9579c4283fd644798632aac20d65282a2e7efcdf0f79b7c545fdeda372381e30", size = 10589621, upload-time = "2025-10-19T13:08:36.676Z" },
 ]
 
 [[package]]
@@ -25,4 +33,4 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pygame-ce", specifier = ">=2.5.3" }]
+requires-dist = [{ name = "pygame-ce", specifier = ">=2.5.6" }]

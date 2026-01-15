@@ -39,7 +39,7 @@ from pdcglobal import (
 from pdcresource import Res
 
 
-class Actor(object):
+class Actor:
 
     tiles = None
     game = None
@@ -249,7 +249,6 @@ class Actor(object):
         """
         The Actor suffers the given amount of Damage
         """
-
         if self.game.player == self:
             self.game.redraw_stats()
 
@@ -468,8 +467,7 @@ class Actor(object):
         if weapon is None:
             if len(melee_weapons) > 0:
                 return False
-            else:
-                return True
+            return True
 
         if weapon.flags & IF_MELEE:
             return True
@@ -561,18 +559,16 @@ class Actor(object):
             if self.major_wounds[zone] == 0:
                 self.die("bloodloss and internal injuries")
                 break
-            else:
-                if zone in ("Abdomen", "Chest", "Head"):
-                    if d(100) > self.skills.Resilence:
-                        self.die("bloodloss and internal injuries")
-                        break
-                    if d(100) > self.skills.Resilence:
-                        self.fall_unconscious()
-                else:
-                    if d(100) > self.skills.Resilence:
-                        self.fall_unconscious()
+            if zone in ("Abdomen", "Chest", "Head"):
+                if d(100) > self.skills.Resilence:
+                    self.die("bloodloss and internal injuries")
+                    break
+                if d(100) > self.skills.Resilence:
+                    self.fall_unconscious()
+            elif d(100) > self.skills.Resilence:
+                self.fall_unconscious()
 
-                self.major_wounds[zone] -= 1
+            self.major_wounds[zone] -= 1
 
         for e in self.running_fx:
             e.tick()
@@ -620,7 +616,6 @@ class Actor(object):
 
     def locateDirection(self, target):
         """Checks in what direction the target is"""
-
         if hasattr(target, "x"):
             tx = target.x
             ty = target.y
@@ -677,8 +672,7 @@ class Actor(object):
                         self.game.shout("You displaced %s" % (result.name))
                         self.sc.do_fov(self.x, self.y, 15)
                         return True
-                    else:
-                        return False
+                    return False
                 self.game.attack(self, result)
                 self.timer += 100 * (5 - self.get_CA())
                 return result

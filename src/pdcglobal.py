@@ -1,3 +1,4 @@
+"""Globals for the game"""
 import math
 import os
 import random

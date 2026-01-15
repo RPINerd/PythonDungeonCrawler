@@ -4,11 +4,11 @@ import random
 
 # import ai
 from actor.actor import Actor
+from ai import *
 
-# from ai import *
 # from effects import *
 from item import suf_books
-from pdcglobal import IF_DRINKABLE, IF_IDENTIFIED, IF_READABLE, cd, d
+from pdcglobal import *
 
 
 class Populator(object):
@@ -104,6 +104,7 @@ class Populator(object):
                     value = line.split("=")[1]
 
                     if attr == "type":
+                        print(f"global keys: {globals().keys()}")
                         item = globals()[value](False)
                         # item.type = globals()[value]
                         item.flags = IF_IDENTIFIED

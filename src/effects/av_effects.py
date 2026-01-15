@@ -1,6 +1,6 @@
 from dv_effects import DazzleEffect
 
-from pdcglobal import D_GENERIC, D_POISON, d
+from pdcglobal import *
 
 from .effect import Effect
 

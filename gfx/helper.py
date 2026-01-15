@@ -1,11 +1,31 @@
+"""
+Graphics helper utility for numbering sprite tiles.
+
+This utility loads an image file and overlays sequential numbers on a grid
+of tiles for easier sprite sheet reference during development.
+"""
+
+from __future__ import annotations
+
 # -*- coding: iso-8859-15 -*-
 import sys
 
 import pygame
 
 
-def load_image(name):
+def load_image(name: str) -> pygame.Surface:
+    """
+    Load and prepare an image with alpha transparency.
 
+    Args:
+        name: Path to the image file.
+
+    Returns:
+        The loaded pygame Surface with alpha channel.
+
+    Raises:
+        SystemExit: If image cannot be loaded.
+    """
     try:
         image = pygame.image.load(name)
     except pygame.error as message:

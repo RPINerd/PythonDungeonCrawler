@@ -1,41 +1,68 @@
+from __future__ import annotations
+
+from typing import Any
+
 from pdcglobal import F_BLOCKSIGHT, MT_FLAGS
 
 
-class sc(object):
-    """Python implementation of Bjorn Bergstrom's excellent recursive shadowcasting FOV algorithm.
-    taken from http://roguebasin.roguelikedevelopment.org"""
+class sc:
+
+    """
+    Python implementation of Bjorn Bergstrom's excellent recursive shadowcasting FOV algorithm
+
+    Sourced from http://roguebasin.roguelikedevelopment.org
+    """
 
     # Multipliers for transforming coordinates to other octants:
-    mult = [
+    mult: list[list[int]] = [
         [1, 0, 0, -1, -1, 0, 0, 1],
         [0, 1, -1, 0, 0, -1, 1, 0],
         [0, 1, 1, 0, 0, -1, -1, 0],
         [1, 0, 0, 1, -1, 0, 0, -1],
     ]
 
-    def __init__(self, map):
-        self.data = map
+    def __init__(self, map: list[list[Any]]) -> None:
+        self.data: list[list[Any]] = map
+        self.width: int
+        self.height: int
         self.width, self.height = len(map[0]), len(map)
-        self.light = []
+        self.light: list[list[int]] = []
         for i in range(self.height):
             self.light.append([0] * self.width)
-        self.flag = 0
+        self.flag: int = 0
 
-    def square(self, x, y):
+    def square(self, x: int, y: int) -> Any:
+        """Get the map tile at coordinates."""
         return self.data[x][y]
 
-    def blocked(self, x, y):
+    def blocked(self, x: int, y: int) -> bool:
+        """Check if a position blocks sight."""
         return x < 0 or y < 0 or x >= self.width or y >= self.height or self.data[y][x][MT_FLAGS] & F_BLOCKSIGHT
 
-    def lit(self, x, y):
+    def lit(self, x: int, y: int) -> bool:
+        """Check if a position is lit."""
         return self.light[y][x] == self.flag
 
-    def set_lit(self, x, y):
+    def set_lit(self, x: int, y: int) -> None:
+        """Mark a position as lit."""
         if 0 <= x < self.width and 0 <= y < self.height:
             self.light[y][x] = self.flag
 
-    def _cast_light(self, cx, cy, row, start, end, radius, xx, xy, yx, yy, id):
-        "Recursive lightcasting function"
+    def _cast_light(
+        self,
+        cx: int,
+        cy: int,
+        row: int,
+        start: float,
+        end: float,
+        radius: int,
+        xx: int,
+        xy: int,
+        yx: int,
+        yy: int,
+        id: int,
+    ) -> None:
+        """Recursive lightcasting function"""
         if start < end:
             return
         radius_squared = radius * radius
@@ -51,32 +78,29 @@ class sc(object):
                 l_slope, r_slope = (dx - 0.5) / (dy + 0.5), (dx + 0.5) / (dy - 0.5)
                 if start < r_slope:
                     continue
-                elif end > l_slope:
+                if end > l_slope:
                     break
-                else:
-                    # Our light beam is touching this square; light it:
-                    if dx * dx + dy * dy < radius_squared:
-                        self.set_lit(X, Y)
-                    if blocked:
-                        # we're scanning a row of blocked squares:
-                        if self.blocked(X, Y):
-                            new_start = r_slope
-                            continue
-                        else:
-                            blocked = False
-                            start = new_start
-                    else:
-                        if self.blocked(X, Y) and j < radius:
-                            # This is a blocking square, start a child scan:
-                            blocked = True
-                            self._cast_light(cx, cy, j + 1, start, l_slope, radius, xx, xy, yx, yy, id + 1)
-                            new_start = r_slope
+                # Our light beam is touching this square; light it:
+                if dx * dx + dy * dy < radius_squared:
+                    self.set_lit(X, Y)
+                if blocked:
+                    # we're scanning a row of blocked squares:
+                    if self.blocked(X, Y):
+                        new_start = r_slope
+                        continue
+                    blocked = False
+                    start = new_start
+                elif self.blocked(X, Y) and j < radius:
+                    # This is a blocking square, start a child scan:
+                    blocked = True
+                    self._cast_light(cx, cy, j + 1, start, l_slope, radius, xx, xy, yx, yy, id + 1)
+                    new_start = r_slope
             # Row is scanned; do next row unless last square was blocked:
             if blocked:
                 break
 
-    def do_fov(self, x, y, radius):
-        "Calculate lit squares from the given location and radius"
+    def do_fov(self, x: int, y: int, radius: int) -> None:
+        """Calculate lit squares from the given location and radius"""
         self.flag += 1
         for oct in range(8):
             self._cast_light(

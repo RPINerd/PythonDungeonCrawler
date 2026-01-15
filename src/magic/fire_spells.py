@@ -1,25 +1,47 @@
+"""
+Fire-based spell implementations.
+
+This module contains spell classes that deal fire damage and apply
+fire-related effects to targets and areas.
+"""
+
+from __future__ import annotations
+
 from gfx.spell_fx import BallFX, RayFX
 from magic.magic import Spell
 from pdcglobal import D_FIRE, RED, ST_GENERIC, YELLOW, d
 
 
 class FireSpell(Spell):
-    def __init__(self):
+
+    """Base class for fire spells."""
+
+    def __init__(self) -> None:
+        """Initialize a fire spell with fire color and generic type."""
         Spell.__init__(self)
         self.color = RED
         self.type = ST_GENERIC
 
 
 class FireBall(FireSpell):
-    def __init__(self):
+
+    """Fireball spell that creates an explosion of fire in an area."""
+
+    def __init__(self) -> None:
+        """Initialize Fireball with cost and description."""
         FireSpell.__init__(self)
         self.phys_cost = 10
         self.mind_cost = 35
         self.name = "Fireball"
         self.infotext = "Causes a ball of Fire to explode"
 
-    def target_choosen(self, pos):
+    def target_choosen(self, pos: tuple[int, int]) -> None:
+        """
+        Cast fireball at target position, dealing fire damage in area.
 
+        Args:
+            pos: Target grid position (x, y) for the spell center.
+        """
         radius = 1 + (self.caster.mind - 100) / 50
         fx = BallFX(RED, YELLOW, self.caster.pos(), pos, radius)
         self.game.drawGFX(fx)
@@ -31,14 +53,24 @@ class FireBall(FireSpell):
 
 
 class HeatRay(FireSpell):
-    def __init__(self):
+
+    """Single-target heat ray spell that damages one enemy."""
+
+    def __init__(self) -> None:
+        """Initialize Heat Ray with cost and description."""
         FireSpell.__init__(self)
         self.phys_cost = 10
         self.mind_cost = 30
         self.name = "Heat Ray"
         self.infotext = "Damage Foes with Fire"
 
-    def target_choosen(self, pos):
+    def target_choosen(self, pos: tuple[int, int]) -> None:
+        """
+        Cast heat ray at target position, damaging the first enemy hit.
+
+        Args:
+            pos: Target grid position (x, y) to aim the ray towards.
+        """
         target = self.get_ray_target(self.caster.pos(), pos)
         if target is None:
             self.game.shout("Your spell fizzles")

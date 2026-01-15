@@ -18,6 +18,8 @@
     You can find the original tileset at: http://rltiles.sf.net
 """
 
+from __future__ import annotations
+
 import gzip
 import os
 import pickle
@@ -30,12 +32,14 @@ if "--profile" in sys.argv:
 
 sys.path.append(os.path.join(".", "src"))
 
+import pathlib
+
 import engine
 import pdcglobal
 
 for file in os.listdir("."):
     if file[0:3] == "MAP":
-        os.remove(file)
+        pathlib.Path(file).unlink()
 
 pygame.init()
 screen = pygame.display.set_mode((1024, 768))
@@ -67,6 +71,5 @@ if quit_mes == pdcglobal.SAVE:
     FILE = gzip.open("save.gz", "w")
     pickle.dump(data, FILE, 2)
     FILE.close()
-else:
-    if os.access("save.gz", os.F_OK):
-        os.remove("save.gz")
+elif os.access("save.gz", os.F_OK):
+    pathlib.Path("save.gz").unlink()

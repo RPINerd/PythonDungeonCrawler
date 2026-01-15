@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import pygame
 
 from actor.hit_zones import HitZones
@@ -38,13 +42,17 @@ from pdcglobal import (
 )
 from pdcresource import Res
 
+if TYPE_CHECKING:
+    from engine import Engine
+
 
 class Actor:
+    """Game actor representing players, NPCs, and monsters."""
 
-    tiles = None
-    game = None
+    tiles: Res | None = None
+    game: Engine | None = None
 
-    def __init__(self, add):
+    def __init__(self, add: dict[str, Any]) -> None:
         Debug.debug("Creating Actor")
         self.game.add_actor(self, add)
         self.name = "Generic Actor"
@@ -100,7 +108,8 @@ class Actor:
         self.unconscious = False
         self.prone = False
 
-    def calc_stats(self):
+    def calc_stats(self) -> None:
+        """Calculate derived stats from primary attributes."""
         self.CA = get_combat_actions(self.DEX)
         self.cur_CA = self.CA
         self.RA = self.CA
@@ -114,40 +123,51 @@ class Actor:
         self.major_wounds = {}
         self.skills = Skills(self)
 
-    def get_STR(self):
+    def get_STR(self) -> int:
+        """Get strength attribute."""
         return self.STR
 
-    def get_CON(self):
+    def get_CON(self) -> int:
+        """Get constitution attribute."""
         return self.CON
 
-    def get_DEX(self):
+    def get_DEX(self) -> int:
+        """Get dexterity attribute."""
         return self.DEX
 
-    def get_SIZ(self):
+    def get_SIZ(self) -> int:
+        """Get size attribute."""
         return self.SIZ
 
-    def get_INT(self):
+    def get_INT(self) -> int:
+        """Get intelligence attribute."""
         return self.INT
 
-    def get_POW(self):
+    def get_POW(self) -> int:
+        """Get power attribute."""
         return self.POW
 
-    def get_CHA(self):
+    def get_CHA(self) -> int:
+        """Get charisma attribute."""
         return self.CHA
 
-    def get_DM(self):
+    def get_DM(self) -> int:
+        """Get damage modifier."""
         return self.DM
 
-    def get_CA(self):
+    def get_CA(self) -> int:
+        """Get current combat actions."""
         return self.cur_CA
 
-    def get_RA(self):
+    def get_RA(self) -> int:
+        """Get current ranged actions."""
         return self.cur_RA
 
-    def get_MOVE(self):
+    def get_MOVE(self) -> int:
+        """Get movement speed."""
         return self.MOVE
 
-    def gain_xp(self, amount):
+    def gain_xp(self, amount: int) -> None:
         """The Actor's XP increases by the given amount"""
         self.xp += amount
 

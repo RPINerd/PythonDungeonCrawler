@@ -1,3 +1,7 @@
+"""Cellular automata cave generation helpers."""
+
+from __future__ import annotations
+
 import random
 
 
@@ -5,52 +9,59 @@ class tool:
 
     # TODO verify indentation correction is accurate
     @staticmethod
-    def line(x, y, x2, y2):
+    def line(x: int, y: int, x2: int, y2: int) -> list[tuple[int, int]]:
         """
-        Brensenham line algorithm
-        """
+        Compute a Bresenham line between two points.
 
-        steep = 0
-        coords = []
+        Args:
+            x: Starting x coordinate.
+            y: Starting y coordinate.
+            x2: Ending x coordinate.
+            y2: Ending y coordinate.
+
+        Returns:
+            A list of (x, y) coordinates along the line.
+        """
+        steep = False
+        coords: list[tuple[int, int]] = []
 
         dx = abs(x2 - x)
-        if (x2 - x) > 0:
-            sx = 1
-        else:
-            sx = -1
-
         dy = abs(y2 - y)
-        if (y2 - y) > 0:
-            sy = 1
-        else:
-            sy = -1
+        sx = 1 if (x2 - x) > 0 else -1
+        sy = 1 if (y2 - y) > 0 else -1
 
         if dy > dx:
-            steep = 1
+            steep = True
             x, y = y, x
             dx, dy = dy, dx
             sx, sy = sy, sx
-            d = (2 * dy) - dx
 
-        for i in range(0, dx):
-            if steep:
-                coords.append((y, x))
-            else:
-                coords.append((x, y))
+        d = (2 * dy) - dx
 
-        while d >= 0:
-            y = y + sy
-            d = d - (2 * dx)
-            x = x + sx
-            d = d + (2 * dy)
-            coords.append((x2, y2))
+        for _ in range(dx):
+            coords.append((y, x) if steep else (x, y))
+            if d >= 0:
+                y += sy
+                d -= 2 * dx
+            x += sx
+            d += 2 * dy
+
+        coords.append((x2, y2))
 
         return coords
 
 
 class cave_gen:
 
-    def __init__(self, WIDTH, HEIGHT, count=0):
+    def __init__(self, WIDTH: int, HEIGHT: int, count: int = 0) -> None:
+        """
+        Initialize cave generator grid.
+
+        Args:
+            WIDTH: Grid width.
+            HEIGHT: Grid height.
+            count: Number of cellular automata iterations to apply initially.
+        """
         self.width = WIDTH
         self.height = HEIGHT
 
@@ -71,18 +82,19 @@ class cave_gen:
         if count > 1:
             self.apply_cell(count)
 
-    def polycut(self):
-        x1 = random.randrange(0, self.width / 4)
-        y1 = random.randrange(0, self.height / 4)
+    def polycut(self) -> None:
+        """Carve a random quadrilateral hole in the grid."""
+        x1 = random.randrange(0, self.width // 4)
+        y1 = random.randrange(0, self.height // 4)
 
-        x2 = random.randrange(self.width - self.width / 4, self.width)
-        y2 = random.randrange(0, self.height / 4)
+        x2 = random.randrange(self.width - self.width // 4, self.width)
+        y2 = random.randrange(0, self.height // 4)
 
-        x3 = random.randrange(0, self.width / 4)
-        y3 = random.randrange(self.height - self.height / 4, self.height)
+        x3 = random.randrange(0, self.width // 4)
+        y3 = random.randrange(self.height - self.height // 4, self.height)
 
-        x4 = random.randrange(self.width - self.width / 4, self.width)
-        y4 = random.randrange(self.height - self.height / 4, self.height)
+        x4 = random.randrange(self.width - self.width // 4, self.width)
+        y4 = random.randrange(self.height - self.height // 4, self.height)
 
         lines = []
         lines.append(tool.line(x1, y1, x2, y2))
@@ -95,8 +107,8 @@ class cave_gen:
                 x, y = point
                 self.A[y][x] = 0
 
-    def apply_cell(self, count):
-
+    def apply_cell(self, count: int) -> None:
+        """Apply cellular automata rules for ``count`` iterations."""
         for _ in range(count):
 
             # A = self.A
@@ -110,7 +122,8 @@ class cave_gen:
                         B[y][x] = 1
             self.A = B
 
-    def checkopen(self, y, x):
+    def checkopen(self, y: int, x: int) -> int:
+        """Return 1 if the neighborhood is empty, else 0."""
         A = self.A
         wn = 0
         for r_x in (-2, -1, 0, 1, 2):
@@ -126,10 +139,10 @@ class cave_gen:
                     print(f"Unexpected Exception {e} in cg.py checkopen()")
         if wn == 0:
             return 1
-        else:
-            return 0
+        return 0
 
-    def checkn(self, y, x, n):
+    def checkn(self, y: int, x: int, n: int) -> int:
+        """Return 1 if the neighborhood has more than ``n`` filled tiles."""
         A = self.A
         wn = 0
         for r_x in (-1, 0, 1):
@@ -145,11 +158,10 @@ class cave_gen:
                     print(f"Unexpected Exception {e} in cg.py checkn()")
         if wn > n:
             return 1
-        else:
-            return 0
+        return 0
 
-    def dprint(self):
-
+    def dprint(self) -> None:
+        """Debug print the cave grid."""
         A = self.A
         z = ""
         i = []
@@ -168,7 +180,8 @@ class cave_gen:
         for y in range(self.height):
             print(i[y])
 
-    def fix(self):
+    def fix(self) -> None:
+        """Add a solid border around the grid."""
         A = self.A
         N = []
         for y in range(self.height + 1):
@@ -185,8 +198,8 @@ class cave_gen:
                     N[y][x] = A[y - 1][x - 1]
         self.A = N
 
-    def dget(self):
-
+    def dget(self) -> list[str]:
+        """Return a string representation of the cave grid."""
         A = self.A
         z = ""
         i = []

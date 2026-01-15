@@ -1,7 +1,12 @@
-"""Globals for the game"""
+"""Globals and utility functions for the game"""
+
+from __future__ import annotations
+
 import math
 import os
 import random
+from collections.abc import Callable
+from typing import Any
 
 import pygame
 
@@ -203,7 +208,8 @@ MAP_TILE_LIST = [
 ]
 
 
-def ammo_fits_weapon(ammo, weapon):
+def ammo_fits_weapon(ammo: Any, weapon: Any) -> bool:
+    """Check if ammunition fits the weapon."""
     return (
         (ammo.flags & IF_ARROW and weapon.flags & IF_FIRES_ARROW)
         or (ammo.flags & IF_BOLT and weapon.flags & IF_FIRES_BOLT)
@@ -217,7 +223,8 @@ def ammo_fits_weapon(ammo, weapon):
 #    return get_dis(x1, y1, x2, y2)
 
 
-def get_dis(x1, y1, x2=None, y2=None):
+def get_dis(x1: int | tuple[int, int], y1: int | tuple[int, int], x2: int | None = None, y2: int | None = None) -> float:
+    """Calculate distance between two points."""
     if x2 is None:
         pos1 = x1
         pos2 = y1
@@ -227,29 +234,33 @@ def get_dis(x1, y1, x2=None, y2=None):
     return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 
-def d(side):
+def d(side: int) -> int:
+    """Roll a die with specified sides."""
     return random.randint(1, side)
 
 
-def cd(count, side):
+def cd(count: int, side: int) -> int:
+    """Roll count dice with specified sides."""
     c = 0
     for _ in range(count):
         c += d(side)
     return c
 
 
-def r4d6():
+def r4d6() -> int:
+    """Roll 4d6 and drop lowest (for attributes)."""
     a = [d(6) for _ in range(4)]
     a.sort()
     del a[0]
     return sum(a)
 
 
-def r2d6():
+def r2d6() -> int:
+    """Roll 2d6+6 for attributes."""
     return d(6) + d(6) + 6
 
 
-def get_damage_mod(TOT):
+def get_damage_mod(TOT: int) -> tuple[Callable[[], int], str]:
     if TOT <= 5:
         return lambda: -d(8), "-1D8"
     if TOT <= 10:
@@ -284,7 +295,8 @@ def get_damage_mod(TOT):
         return lambda: d(12) + d(12) + d(12), "+3D12"
 
 
-def get_combat_actions(DEX):
+def get_combat_actions(DEX: int) -> int:
+    """Calculate combat actions based on dexterity."""
     if DEX <= 6:
         return 1
     if DEX <= 12:
@@ -295,7 +307,7 @@ def get_combat_actions(DEX):
         return 4
 
 
-def line(x, y, x2, y2):
+def line(x: int, y: int, x2: int, y2: int) -> list[tuple[int, int]]:
     """Brensenham line algorithm"""
     steep = 0
     coords = []
@@ -329,21 +341,25 @@ def line(x, y, x2, y2):
     return coords
 
 
-def sort_by_time(a, b):
+def sort_by_time(a: Any, b: Any) -> int:
+    """Sort comparator by timer attribute."""
     return a.timer - b.timer
 
 
-def sort_by_type(a, b):
+def sort_by_type(a: Any, b: Any) -> int:
+    """Sort comparator by type attribute."""
     return a.type - b.type
 
 
 def get_chars():
+    """Generator yielding characters for item selection."""
     c = "abcdefghijklmonpqrstuvwxyz0123456789"
     for i in range(0, 27):
         yield c[i]
 
 
-def load_image(name):
+def load_image(name: str) -> pygame.Surface:
+    """Load an image from the gfx directory."""
     try:
         image = pygame.image.load(os.path.join("gfx", name))
     except pygame.error as message:
@@ -356,7 +372,7 @@ def load_image(name):
     return image
 
 
-def get_new_pos(pos, direction):
+def get_new_pos(pos: tuple[int, int], direction: int) -> tuple[int, int]:
     new_pos = pos
     if direction == MOVE_DOWN or direction == MOVE_DOWN_LEFT or direction == MOVE_DOWN_RIGHT:
         new_pos = new_pos[0], new_pos[1] + 1
@@ -370,15 +386,18 @@ def get_new_pos(pos, direction):
 
 
 class Debug:
+    """Debug utility class for game messages."""
 
-    game_instance = None
+    game_instance: Any = None
 
     @staticmethod
-    def init_debug(game):
+    def init_debug(game: Any) -> None:
+        """Initialize debug system with game instance."""
         Debug.game_instance = game
 
     @staticmethod
-    def debug(text):
+    def debug(text: str) -> None:
+        """Output debug message."""
         if MES_SYS:
             if Debug.game_instance is not None:
                 Debug.game_instance.shout("[DEBUG-MESSGAE:] " + text)

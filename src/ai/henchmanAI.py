@@ -1,17 +1,37 @@
-# from actor import Actor
-# from key_mapping import MOVE_WAIT
+"""
+Henchman AI implementation for companion behavior.
+
+This module provides AI for henchmen/companions that follow and support
+the player while making tactical combat decisions.
+"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pdcglobal import get_dis
 
 from .ai import AI
 
+if TYPE_CHECKING:
+    from actor.actor import Actor
+
 
 class HenchmanAI(AI):
-    def __init__(self, actor):
+
+    """AI for henchmen and companion characters."""
+
+    def __init__(self, actor: Actor) -> None:
+        """
+        Initialize henchman AI for an actor.
+
+        Args:
+            actor: The actor controlled by this AI.
+        """
         AI.__init__(self, actor)
-        # self.friends.append(self.game.player.id)
 
-    def act(self):
-
+    def act(self) -> None:
+        """Execute one AI action with companion logic."""
         foes = self.get_all_foes_in_sight()
         foes.sort(
             cmp=lambda x, y: int(get_dis(x.pos(), self.actor.pos()) * 100)
@@ -31,11 +51,10 @@ class HenchmanAI(AI):
                 self.attack_foe(foe)
             else:
                 self.stand_still()
+        elif len(self.friends) > 0:
+            self.move_toward_foe(self.game.get_actor_by_id(list(self.friends)[0]))
         else:
-            if len(self.friends) > 0:
-                self.move_toward_foe(self.game.get_actor_by_id(list(self.friends)[0]))
-            else:
-                self.stand_still()
+            self.stand_still()
 
         if self.actor.timer == 0:
             print("ouch")

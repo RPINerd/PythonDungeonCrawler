@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import pygame
 
 from pdcglobal import (
@@ -13,15 +17,20 @@ from pdcglobal import (
 )
 from pdcresource import Res
 
+if TYPE_CHECKING:
+    from engine import Engine
 
-class Item(object):
 
-    eq_tiles = None
-    dd_tiles = None
+class Item:
 
-    game = None
+    """Base class for all game items."""
 
-    def __init__(self, add):
+    eq_tiles: Res | None = None
+    dd_tiles: Res | None = None
+
+    game: Engine | None = None
+
+    def __init__(self, add: dict[str, Any]) -> None:
         self.game.add_item(self, add)
         self.cur_surf = None
         self.eq_img = None
@@ -53,18 +62,19 @@ class Item(object):
         self.ENC = 0
         self.H2 = False
 
-    def get_ps(self):
+    def get_ps(self) -> str:
+        """Get player symbol for this item."""
         if self.player_symbol is None:
             self.player_symbol = self.game.get_symbol()
         return self.player_symbol
 
-    def used(self):
+    def used(self) -> bool:
+        """Reduce amount by one. Returns False if item is depleted."""
         self.amount -= 1
-        if self.amount == 0:
-            return False
-        return True
+        return self.amount != 0
 
-    def get_name(self):
+    def get_name(self) -> str:
+        """Get display name of item."""
         if self.flags & IF_IDENTIFIED:
             name = self.full_name
         else:
@@ -75,13 +85,15 @@ class Item(object):
 
         return name
 
-    def read(self, item, obj):
+    def read(self, item: Item, obj: Any) -> None:
+        """Handle reading this item."""
         self.game.shout("Nothing interesting")
 
-    def drink(self, item, obj):
+    def drink(self, item: Item, obj: Any) -> None:
+        """Handle drinking this item."""
         self.game.shout("Tastes like water")
 
-    def info(self):
+    def info(self) -> list[str]:
         lines = []
 
         if not self.flags & IF_IDENTIFIED:

@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import copy
 import random
+from typing import TYPE_CHECKING
 
-import dungeon.bsd as bsd
+from dungeon import bsd
 from pdcglobal import (
     DG_BSD,
     F_WALKABLE,
@@ -16,11 +19,14 @@ from pdcglobal import (
 )
 from pdcresource import Res
 
+if TYPE_CHECKING:
+    from engine import Engine
+
 # from dmap import *
 # from cg import cave_gen
 
 
-testmap = [
+testmap: list[list[int]] = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -42,12 +48,14 @@ testmap = [
 ]
 
 
-class Map(object):
+class Map:
 
-    tiles = None
-    game = None
+    """Represents a dungeon level map."""
 
-    def __init__(self, MapArray, level=1):
+    tiles: Res | None = None
+    game: Engine | None = None
+
+    def __init__(self, MapArray: list[list[int]], level: int = 1) -> None:
         self.game.add_to_world_objects(self)
         self.map_array = []
 
@@ -64,16 +72,18 @@ class Map(object):
         self.level = level
         Debug.debug("Map is " + str(self.width) + "x" + str(self.height))
 
-    def check_tiles(self):
+    def check_tiles(self) -> None:
+        """Initialize tile graphics if not already loaded."""
         if Map.tiles is None:
             Map.tiles = Res("dc-dngn.png", TILESIZE)
 
-    def clear_surfaces(self):
+    def clear_surfaces(self) -> None:
+        """Clear cached surfaces to force regeneration."""
         Map.Tiles = None
         self.cur_surf = None
 
     @staticmethod
-    def Random(up=True, down=True, level=1, type=DG_BSD, w=80, h=40, s=5):
+    def Random(up: bool = True, down: bool = True, level: int = 1, type: int = DG_BSD, w: int = 80, h: int = 40, s: int = 5) -> Map:
         #        startx = 90
         #        starty = 100
         #        somename = dMap()
@@ -96,7 +106,7 @@ class Map(object):
         #            array.append(line)
 
         if type == DG_BSD:
-            #! LOOK AWAY!! BAD, BAD CODE!!
+            # ! LOOK AWAY!! BAD, BAD CODE!!
             i = 0
             array = None
             r1 = bsd.Room(0, 0, w, h)

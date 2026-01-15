@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import random
+from typing import TYPE_CHECKING
 
 from key_mapping import (
     MOVE_DOWN,
@@ -14,21 +17,28 @@ from key_mapping import (
 )
 from pdcglobal import d, get_dis, get_new_pos
 
-# from pdcresource import *
+if TYPE_CHECKING:
+    from actor.actor import Actor
+    from engine import Engine
 
 
-class AI(object):
-    game = None
+class AI:
 
-    def __init__(self, actor):
-        self.actor = actor
-        self.hostile = set()
-        self.friends = set()
+    """Base AI class for NPC behavior."""
 
-    def act(self):
+    game: Engine | None = None
+
+    def __init__(self, actor: Actor) -> None:
+        self.actor: Actor = actor
+        self.hostile: set[int] = set()
+        self.friends: set[int] = set()
+
+    def act(self) -> None:
+        """Execute AI turn. Override in subclasses."""
         pass
 
-    def get_all_foes_in_sight(self):
+    def get_all_foes_in_sight(self) -> list[Actor]:
+        """Get all hostile actors currently visible."""
         all_foes = self.game.get_all_srd_actors(self.actor.pos(), radius=15)
         seeing = []
         self.actor.sc.do_fov(self.actor.x, self.actor.y, 10)
@@ -38,7 +48,8 @@ class AI(object):
                 seeing.append(act)
         return seeing
 
-    def seeing_actor(self, target):
+    def seeing_actor(self, target: Actor) -> bool:
+        """Check if actor can see the target."""
         dis = get_dis(self.actor.x, self.actor.y, target.x, target.y)
         if dis > 15:
             return False
@@ -47,13 +58,15 @@ class AI(object):
         x, y = target.pos()
         return self.actor.sc.lit(x, y)
 
-    def seeing_player(self):
+    def seeing_player(self) -> bool:
+        """Check if actor can see the player."""
         return self.seeing_actor(self.game.player)
 
-    def get_player_direction(self):
+    def get_player_direction(self) -> int:
+        """Get direction from actor to player."""
         return self.actor.locateDirection(self.game.player)
 
-    def build_alternate_dirs(self, dir, panic=False):
+    def build_alternate_dirs(self, dir: int, panic: bool = False) -> list[int]:
         if dir == MOVE_UP:
             return [MOVE_UP_LEFT, MOVE_UP_RIGHT] if not panic else [MOVE_UP_LEFT, MOVE_UP_RIGHT, MOVE_RIGHT, MOVE_LEFT]
         if dir == MOVE_DOWN:
@@ -79,7 +92,8 @@ class AI(object):
         if dir == MOVE_DOWN_RIGHT:
             return [MOVE_DOWN, MOVE_RIGHT] if not panic else [MOVE_DOWN, MOVE_RIGHT, MOVE_DOWN_LEFT, MOVE_UP_RIGHT]
 
-    def move_randomly(self):
+    def move_randomly(self) -> None:
+        """Move in a random direction."""
         list = []
 
         if d(20) < 10:
@@ -205,8 +219,7 @@ class AI(object):
     def wanna_use_range(self):
         if self.actor.ready_to_range():
             return True
-        else:
-            return False
+        return False
 
     def attack_foe(self, foe):
         x1, y1 = self.actor.pos()
@@ -215,15 +228,13 @@ class AI(object):
             if not self.actor.range_equipped():
                 self.actor.equip_range()
                 return
-            else:
-                self.actor.fire(foe.pos())
-                return
-        else:
-            if not self.actor.melee_equipped():
-                self.actor.equip_melee()
-                return
-            dir = self.actor.locateDirection(foe)
-            self.actor.move(dir)
+            self.actor.fire(foe.pos())
             return
+        if not self.actor.melee_equipped():
+            self.actor.equip_melee()
+            return
+        dir = self.actor.locateDirection(foe)
+        self.actor.move(dir)
+        return
         self.stand_still()
         print("ouch")

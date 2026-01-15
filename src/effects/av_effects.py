@@ -1,17 +1,30 @@
+"""Audio-visual effects for combat and status."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from dv_effects import DazzleEffect
 
-from pdcglobal import *
+from pdcglobal import D_GENERIC, D_POISON, d
 
 from .effect import Effect
 
+if TYPE_CHECKING:
+    from actor.actor import Actor
+
 
 class StunEffect(Effect):
-    def __init__(self, host, owner):
+
+    """Effect that stuns an actor, slowing their actions."""
+
+    def __init__(self, host: Actor, owner: Actor | None) -> None:
         dur = d(3)
         Effect.__init__(self, dur, host, owner)
         # weaponinfotext = "Stuns the enemy"
 
-    def tick(self):
+    def tick(self) -> None:
+        """Process stun effect tick."""
         self.host.timer += self.host.speed * d(3)
         if self.host == self.host.game.player:
             self.host.game.shout("You are stunned")
@@ -22,12 +35,16 @@ class StunEffect(Effect):
 
 
 class BleedEffect(Effect):
-    def __init__(self, host, owner):
+
+    """Effect that causes continuous bleeding damage."""
+
+    def __init__(self, host: Actor, owner: Actor | None) -> None:
         dur = d(10)
         Effect.__init__(self, dur, host, owner)
         # weaponinfotext = "Makes the enemy bleed"
 
-    def tick(self):
+    def tick(self) -> None:
+        """Process bleed effect tick."""
         self.host.game.do_damage(self.host, d(3), D_GENERIC, self.owner)
         if self.host == self.host.game.player:
             self.host.game.shout("You are bleeding")
@@ -37,12 +54,16 @@ class BleedEffect(Effect):
 
 
 class BugPoisonEffect(Effect):
-    def __init__(self, host, owner):
+
+    """Poison effect that causes sleep."""
+
+    def __init__(self, host: Actor, owner: Actor | None) -> None:
         dur = d(25)
         Effect.__init__(self, dur, host, owner)
         # weaponinfotext = "Poisons the enemy"
 
-    def tick(self):
+    def tick(self) -> None:
+        """Process bug poison tick."""
         if d(100) < 5:
             self.host.timer += self.host.speed * d(5)
             if self.host == self.host.game.player:
@@ -53,12 +74,16 @@ class BugPoisonEffect(Effect):
 
 
 class YumuraPoisonEffect(Effect):
-    def __init__(self, host, owner):
+
+    """Complex poison with multiple effects."""
+
+    def __init__(self, host: Actor, owner: Actor | None) -> None:
         dur = d(10)
         Effect.__init__(self, dur, host, owner)
         # weaponinfotext = "Poisons the enemy"
 
-    def tick(self):
+    def tick(self) -> None:
+        """Process Yumura poison tick."""
         self.host.game.do_damage(self.host, d(3), D_POISON, self.owner)
         notice = False
         if d(100) < 10:
@@ -82,12 +107,16 @@ class YumuraPoisonEffect(Effect):
 
 
 class KillerbeePoisonEffect(Effect):
-    def __init__(self, host, owner):
+
+    """Strong poison from killer bees."""
+
+    def __init__(self, host: Actor, owner: Actor | None) -> None:
         dur = d(10)
         Effect.__init__(self, dur, host, owner)
         # weaponinfotext = "Poisons the enemy"
 
-    def tick(self):
+    def tick(self) -> None:
+        """Process killer bee poison tick."""
         self.host.game.do_damage(self.host, d(3), D_POISON, self.owner)
         if d(100) < 35:
             StunEffect(self.host, self.owner)

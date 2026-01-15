@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 import pygame
@@ -16,10 +18,12 @@ import pygame
 
 class Res:
 
-    def __init__(self, name, tilesize):
-        self.res = self.load_image(name)
+    """Resource loader for game graphics."""
+
+    def __init__(self, name: str, tilesize: int) -> None:
+        self.res: pygame.Surface = self.load_image(name)
         _, _, w, h = self.res.get_rect()
-        self.tiles = []
+        self.tiles: list[pygame.Surface] = []
         for y in range(0, int(h / tilesize)):
             for x in range(0, int(w / tilesize)):
                 tile = pygame.Surface((tilesize, tilesize), depth=self.res)
@@ -27,10 +31,11 @@ class Res:
                 tile.blit(self.res, (0, 0), chop_rect)
                 self.tiles.append(tile)
 
-    def get(self, no):
+    def get(self, no: int) -> pygame.Surface:
+        """Get a tile by index."""
         return self.tiles[no]
 
-    def get_subs(self, no_part):
+    def get_subs(self, no_part: tuple[int, int] | None) -> pygame.Surface:
         if no_part is None:
             return pygame.Surface((0, 0))
         no, part = no_part
@@ -66,7 +71,8 @@ class Res:
 
         return sub
 
-    def load_image(self, name):
+    def load_image(self, name: str) -> pygame.Surface:
+        """Load an image from the gfx directory."""
         try:
             image = pygame.image.load(os.path.join("gfx", name))
         except pygame.error as message:

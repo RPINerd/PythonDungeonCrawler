@@ -1,24 +1,36 @@
-class Camera(object):
+from __future__ import annotations
 
-    game = None
+from typing import TYPE_CHECKING
 
-    def __init__(self, h, w):
-        self.height = h
-        self.width = w
-        self.x = 0
-        self.y = 0
-        self.edge = 7
+if TYPE_CHECKING:
+    from engine import Engine
 
-    def get_view_port(self):
+
+class Camera:
+
+    """Camera for managing viewport in the game world."""
+
+    game: Engine | None = None
+
+    def __init__(self, h: int, w: int) -> None:
+        self.height: int = h
+        self.width: int = w
+        self.x: int = 0
+        self.y: int = 0
+        self.edge: int = 7
+
+    def get_view_port(self) -> tuple[int, int, int, int]:
+        """Get the current viewport bounds."""
         return self.x, self.y, self.x + self.width, self.y + self.height
 
-    def is_in_view(self, x, y):
+    def is_in_view(self, x: int, y: int) -> bool:
         if x >= self.x and x <= self.x + self.width:
             if y >= self.y and y <= self.y + self.height:
                 return True
         return False
 
-    def adjust(self, pos):
+    def adjust(self, pos: tuple[int, int]) -> bool:
+        """Adjust camera position to keep position in view. Returns True if adjusted."""
         x, y = pos
         adj = False
         # adjust to down

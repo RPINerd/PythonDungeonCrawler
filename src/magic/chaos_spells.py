@@ -1,3 +1,12 @@
+"""
+Chaos-based spell implementations.
+
+This module contains spell classes that deal chaos damage, manipulate
+creatures, and produce unpredictable magical effects.
+"""
+
+from __future__ import annotations
+
 import random
 
 from gfx.spell_fx import RayFX
@@ -6,21 +15,35 @@ from pdcglobal import BLACK, D_CHAOS, GREEN, I_CORPSE, PURPLE, ST_GENERIC, d
 
 
 class ChaosSpell(Spell):
-    def __init__(self):
+
+    """Base class for chaos spells."""
+
+    def __init__(self) -> None:
+        """Initialize a chaos spell with purple color and generic type."""
         Spell.__init__(self)
         self.color = PURPLE
         self.type = ST_GENERIC
 
 
 class FoulnessRay(ChaosSpell):
-    def __init__(self):
+
+    """Single-target chaos ray that damages both caster and target."""
+
+    def __init__(self) -> None:
+        """Initialize Ray of Foulness with cost and description."""
         ChaosSpell.__init__(self)
         self.phys_cost = 5
         self.mind_cost = 5
         self.name = "Ray of Foulness"
         self.infotext = "Damage Foes with Chaos"
 
-    def target_choosen(self, pos):
+    def target_choosen(self, pos: tuple[int, int]) -> None:
+        """
+        Cast chaos ray at target position, dealing damage to caster and target.
+
+        Args:
+            pos: Target grid position (x, y) to aim the ray towards.
+        """
         target = self.get_ray_target(self.caster.pos(), pos)
         if target is None:
             self.game.shout("Your spell fizzles")
@@ -34,14 +57,24 @@ class FoulnessRay(ChaosSpell):
 
 
 class CorpseDance(ChaosSpell):
-    def __init__(self):
+
+    """Corpse animation spell that raises undead creatures."""
+
+    def __init__(self) -> None:
+        """Initialize Corpse Dance with cost and description."""
         ChaosSpell.__init__(self)
         self.phys_cost = 10
         self.mind_cost = 45
         self.name = "Corpse Dance"
         self.infotext = "Reanimates corpse"
 
-    def target_choosen(self, pos):
+    def target_choosen(self, pos: tuple[int, int]) -> None:
+        """
+        Cast corpse dance at position, reanimating a corpse as undead ally.
+
+        Args:
+            pos: Target grid position (x, y) where a corpse is located.
+        """
         targets = self.game.get_items_at(pos)
         random.shuffle(targets)
         for item in targets:
@@ -52,14 +85,24 @@ class CorpseDance(ChaosSpell):
 
 
 class DrainLife(ChaosSpell):
-    def __init__(self):
+
+    """Life drain spell that damages enemy and heals caster."""
+
+    def __init__(self) -> None:
+        """Initialize Drain Life with cost and description."""
         ChaosSpell.__init__(self)
         self.phys_cost = 10
         self.mind_cost = 45
         self.name = "Drain Life"
         self.infotext = "Damage Foes, heals self"
 
-    def target_choosen(self, pos):
+    def target_choosen(self, pos: tuple[int, int]) -> None:
+        """
+        Cast drain life ray at target, absorbing health.
+
+        Args:
+            pos: Target grid position (x, y) to drain life from.
+        """
         target = self.get_ray_target(self.caster.pos(), pos)
         if target is None:
             self.game.shout("Your spell fizzles")

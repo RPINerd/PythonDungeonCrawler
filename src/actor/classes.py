@@ -1,24 +1,31 @@
-"""
-    Set up the various RPG class choices for the player
-"""
+"""Set up the various RPG class choices for the player"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import magic
 from dungeon.populator import Populator
 
+if TYPE_CHECKING:
+    from actor.actor import Actor
 
-class Class(object):
-    """"""
 
-    def __init__(self, host):
-        self.host = host
+class Class:
+
+    """Base class for character classes."""
+
+    def __init__(self, host: Actor) -> None:
+        self.host: Actor = host
 
 
 class Fighter(Class):
-    """"""
+
+    """Fighter class skilled with all weapons."""
 
     desc = "Thanks to unremittingly training, $$$ was skilled at all weapons."
 
-    def __init__(self, host):
+    def __init__(self, host: Actor) -> None:
         Class.__init__(self, host)
         i = Populator.create_item("Flail", "basic_weapons", 2)
         self.host.pick_up(i)
@@ -47,11 +54,12 @@ class Fighter(Class):
 
 
 class Barbarian(Class):
-    """"""
+
+    """Barbarian class specializing in axes."""
 
     desc = "Since his youth, $$$ clearly loved one weapon the most: the Axe."
 
-    def __init__(self, host):
+    def __init__(self, host: Actor) -> None:
         Class.__init__(self, host)
         i = Populator.create_item("Axe", "basic_weapons", 25)
         self.host.pick_up(i)
@@ -65,32 +73,35 @@ class Barbarian(Class):
 
 
 class Priest(Class):
-    """"""
+
+    """Priest class devoted to law and order."""
 
     desc = "Since %%% birth, $$$ stood up for Law and Order."
 
-    def __init__(self, host):
+    def __init__(self, host: Actor) -> None:
         Class.__init__(self, host)
         self.host.timer = 0
 
 
 class Sorcerer(Class):
-    """"""
+
+    """Sorcerer class mastering elemental forces."""
 
     desc = "All %%% live $$$ tried to master the Elemental-Forces "
 
-    def __init__(self, host):
+    def __init__(self, host: Actor) -> None:
         Class.__init__(self, host)
         self.host.spells.append(magic.fire_spells.FireBall())
         self.host.timer = 0
 
 
 class Necromancer(Class):
-    """"""
+
+    """Necromancer class wielding chaos magic."""
 
     desc = "Allured by the Power of Chaos, $$$ was a fearsome Wizrad."
 
-    def __init__(self, host):
+    def __init__(self, host: Actor) -> None:
         Class.__init__(self, host)
         self.host.spells.append(magic.chaos_spells.CorpseDance())
         self.host.spells.append(magic.chaos_spells.DrainLife())

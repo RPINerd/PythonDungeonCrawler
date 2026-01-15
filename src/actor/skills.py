@@ -1,5 +1,15 @@
-class Skills(object):
-    def __init__(self, host):
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from actor.actor import Actor
+
+
+class Skills:
+    """Manages character combat and ability skills."""
+
+    def __init__(self, host: Actor) -> None:
 
         skills = {
             "Flail": host.STR + host.DEX,
@@ -30,15 +40,19 @@ class Skills(object):
         self.__dict__["skills"] = skills
         self.__dict__["host"] = host
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
+        """Return state for pickling."""
         return self.__dict__
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        """Restore state from pickling."""
         for item in state:
             self.__dict__[item] = state[item]
 
-    def __getattr__(self, attr):
+    def __getattr__(self, attr: str) -> Any:
+        """Get attribute dynamically."""
         return self.__dict__[attr]
 
-    def __setattr__(self, attr, value):
+    def __setattr__(self, attr: str, value: Any) -> None:
+        """Set attribute dynamically."""
         self.__dict__[attr] = value

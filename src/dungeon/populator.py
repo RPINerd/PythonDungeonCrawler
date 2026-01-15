@@ -1,26 +1,53 @@
-# import copy
-import os
-import random
+"""
+Dungeon population system for items and creatures.
 
-# import ai
+This module provides the Populator class that spawns items and creatures
+in dungeon maps by reading from configuration files.
+"""
+
+from __future__ import annotations
+
+import os
+import pathlib
+import random
+from typing import TYPE_CHECKING
+
 from actor.actor import Actor
 from ai import *
-
-# from effects import *
 from item import suf_books
 from pdcglobal import *
 
+if TYPE_CHECKING:
+    from dungeon.map import Map
+    from engine import Engine
+    from item.item import Item
 
-class Populator(object):
 
-    game = None
+class Populator:
 
-    def __init__(self):
+    """Handles spawning of items and creatures in dungeons."""
+
+    game: Engine | None = None
+
+    def __init__(self) -> None:
+        """Initialize populator."""
         pass
 
     @staticmethod
-    def fill_map_with_items(map, filename, min, max, magic):
-        stuff = open(os.path.join("item", filename + ".pdcif"), "r").read()
+    def fill_map_with_items(
+        map: Map, filename: str, min: int, max: int, magic: int
+    ) -> None:
+        """
+        Fill map with random items from configuration file.
+
+        Args:
+            map: The map to populate with items.
+            filename: Name of item configuration file (without extension).
+            min: Minimum number of items to spawn.
+            max: Maximum number of items to spawn.
+            magic: Percentage chance for magical properties.
+        """
+        stuff = pathlib.Path(os.path.join("item", filename + ".pdcif")).open("r").read()
         stuff = stuff.split("\n")
 
         items = Populator.findAll(stuff)
@@ -35,8 +62,19 @@ class Populator(object):
             Populator.game.add_item(item, True)
 
     @staticmethod
-    def create_item(name, filename, magic):
-        stuff = open(os.path.join("item", filename + ".pdcif"), "r").read()
+    def create_item(name: str, filename: str, magic: int) -> Item:
+        """
+        Create a single item from configuration file.
+
+        Args:
+            name: Name of the item template.
+            filename: Name of item configuration file (without extension).
+            magic: Percentage chance for magical properties.
+
+        Returns:
+            Created Item object.
+        """
+        stuff = pathlib.Path(os.path.join("item", filename + ".pdcif")).open("r").read()
         stuff = stuff.split("\n")
         item = Populator.__create_item(name, stuff, magic)
         item.filename = filename
@@ -44,8 +82,18 @@ class Populator(object):
         return item
 
     @staticmethod
-    def create_creature(name, filename):
-        creatures = open(os.path.join("npc", filename + ".pdccf"), "r").read()
+    def create_creature(name: str, filename: str) -> Actor:
+        """
+        Create a single creature from configuration file.
+
+        Args:
+            name: Name of the creature template.
+            filename: Name of creature configuration file (without extension).
+
+        Returns:
+            Created Actor object.
+        """
+        creatures = pathlib.Path(os.path.join("npc", filename + ".pdccf")).open("r").read()
         creatures = creatures.split("\n")
         actor = Populator.__create_actor(name, creatures)
         actor.filename = filename
@@ -53,8 +101,17 @@ class Populator(object):
         return actor
 
     @staticmethod
-    def fill_map_with_creatures(map, filename, min, max):
-        creatures = open(os.path.join("npc", filename + ".pdccf"), "r").read()
+    def fill_map_with_creatures(map: Map, filename: str, min: int, max: int) -> None:
+        """
+        Fill map with random creatures from configuration file.
+
+        Args:
+            map: The map to populate with creatures.
+            filename: Name of creature configuration file (without extension).
+            min: Minimum number of creatures to spawn.
+            max: Maximum number of creatures to spawn.
+        """
+        creatures = pathlib.Path(os.path.join("npc", filename + ".pdccf")).open("r").read()
         creatures = creatures.split("\n")
 
         actors = Populator.findAll(creatures)
@@ -76,7 +133,18 @@ class Populator(object):
                     Populator.game.add_actor(Populator.create_creature(name, sfile), True)
 
     @staticmethod
-    def __create_item(name, stuff, magic):
+    def __create_item(name: str, stuff: list[str], magic: int) -> Item:
+        """
+        Parse item configuration and create item object.
+
+        Args:
+            name: Name of the item template.
+            stuff: Lines of configuration data.
+            magic: Percentage chance for magical properties.
+
+        Returns:
+            Created Item object.
+        """
         item = None
 
         sn = True
@@ -202,7 +270,17 @@ class Populator(object):
         return item
 
     @staticmethod
-    def __create_actor(name, stuff):
+    def __create_actor(name: str, stuff: list[str]) -> Actor:
+        """
+        Parse creature configuration and create actor object.
+
+        Args:
+            name: Name of the creature template.
+            stuff: Lines of configuration data.
+
+        Returns:
+            Created Actor object.
+        """
         actor = None
 
         sn = True
@@ -295,7 +373,16 @@ class Populator(object):
         return actor
 
     @staticmethod
-    def findAll(stuff):
+    def findAll(stuff: list[str]) -> list[str]:
+        """
+        Find all entity names in configuration data.
+
+        Args:
+            stuff: Lines of configuration data.
+
+        Returns:
+            List of entity names found.
+        """
         actors = []
         for line in stuff:
             if line.strip() == "" or line.startswith("#"):

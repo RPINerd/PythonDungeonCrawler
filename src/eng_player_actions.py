@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pdcglobal import (
     F_SC_DOWN,
     F_SC_UP,
@@ -22,46 +26,56 @@ from pdcglobal import (
     get_chars,
 )
 
+if TYPE_CHECKING:
+    from engine import Engine
+
 # TODO why is gen = get_chars() used in every function?
 
 
-class PlayerActions(object):
-    def __init__(self, game):
-        self.game = game
+class PlayerActions:
 
-    def cursor(self):
+    """Handles player action commands."""
+
+    def __init__(self, game: Engine) -> None:
+        self.game: Engine = game
+
+    def cursor(self) -> None:
+        """Enter cursor mode."""
         self.game.cursor.set_pos(self.game.player.pos())
         self.game.state = S_PLAYER_CURSOR
 
-    def stats(self):
+    def stats(self) -> None:
+        """Show stats improvement interface."""
         gen = get_chars()
         self.game._items_to_choose = {}
         for stat in self.game.stats:
             self.game._items_to_choose[gen.next()] = stat
         self.game.state = S_PLAYER_STATS
 
-    def throw_fired(self, pos):
+    def throw_fired(self, pos: tuple[int, int]) -> None:
+        """Execute item throw."""
         self.game.player.throw(self.game.item_to_throw, pos)
         self.game.item_to_throw = None
 
-    def throw_fire(self):
+    def throw_fire(self) -> None:
+        """Start throw targeting mode."""
         self.game.cursor.set_pos(self.game.player.pos())
         self.game.state = S_PLAYER_CURSOR
         self.game.wait_for_target(self.throw_fired)
 
-    def fire(self):
+    def fire(self) -> None:
         weapon = self.game.player.weapon
         ammo = self.game.player.ammo
         if weapon is None or not weapon.flags & IF_RANGED:
             self.game.shout("You are not wielding a Range-Weapon")
             return
         if ammo is None:
-            self.game.shout("You have no ammonition ready")
+            self.game.shout("You have no ammunition ready")
             return
         if not ammo_fits_weapon(ammo, weapon):
             # ((ammo.flags & IF_ARROW and weapon.flags & IF_FIRES_ARROW) or
             #      (ammo.flags & IF_BOLT and weapon.flags & IF_FIRES_BOLT)):
-            self.game.shout("Ammonition doesn`t fit to Weapon")
+            self.game.shout("Ammunition doesn`t fit to Weapon")
             return
 
         self.game.cursor.set_pos(self.game.player.pos())

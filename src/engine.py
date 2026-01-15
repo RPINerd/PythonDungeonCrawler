@@ -1,9 +1,20 @@
+"""
+Core game engine managing game state, actors, items, and rendering.
+
+This module contains the main Engine class that coordinates all game systems
+including actors, items, maps, dungeon generation, graphics, and user input.
+"""
+
+from __future__ import annotations
+
 import gc
 import gzip
 import os
+import pathlib
 import pickle
 import random
 import sys
+from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary
 
 import pygame
@@ -51,14 +62,19 @@ from pdcglobal import (
 from pdcresource import Res
 from shadowcast import sc
 
-# from pygame import *
+if TYPE_CHECKING:
+    from gfx.gfx import GFX
+    from item.item import Item
 
 
-class Engine(object):
+class Engine:
 
-    __world_objects = WeakKeyDictionary()
+    """Main game engine coordinating all game systems."""
 
-    def __init__(self):
+    __world_objects: WeakKeyDictionary = WeakKeyDictionary()
+
+    def __init__(self) -> None:
+        """Initialize the game engine with all subsystems."""
         self.__message_queue = []
         self.__cur_stat_surf = None
         self.__actors = []
@@ -116,10 +132,12 @@ class Engine(object):
         for s in c:
             self._symbols.append(s)
 
-    def call_pl_item_throw(self):
+    def call_pl_item_throw(self) -> None:
+        """Call player item throw action."""
         self.__player_actions.throw_fire()
 
-    def re_init(self):
+    def re_init(self) -> None:
+        """Reinitialize engine after loading a saved game."""
         Debug.debug("re_init")
         self.__quit_loop = False
         self.quit_mes = QUIT
@@ -138,17 +156,38 @@ class Engine(object):
         if hasattr(self, "map"):
             self.redraw_map()
 
-    def get_symbol(self):
+    def get_symbol(self) -> str:
+        """
+        Get next available symbol for item selection.
+
+        Returns:
+            Single character symbol.
+        """
         s = self._symbols.pop(0)
         return s
 
-    def free_symbol(self, s):
+    def free_symbol(self, s: str | None) -> None:
+        """
+        Return symbol to available pool.
+
+        Args:
+            s: Symbol to free, or None.
+        """
         if s is None:
             return
         self._symbols.append(s)
         self._symbols.sort()
 
-    def get_actor_at(self, pos):
+    def get_actor_at(self, pos: tuple[int, int]) -> Actor | None:
+        """
+        Get actor at specific position.
+
+        Args:
+            pos: Grid position (x, y).
+
+        Returns:
+            Actor at position, or None if empty.
+        """
         x, y = pos
         act = self.__actor_grid[y][x]
         return act[0] if len(act) > 0 else None
@@ -157,7 +196,20 @@ class Engine(object):
         #        return actor
         # return None
 
-    def get_all_srd_actors(self, pos, radius=1, null_pos=False):
+    def get_all_srd_actors(
+        self, pos: tuple[int, int], radius: int = 1, null_pos: bool = False
+    ) -> list[Actor]:
+        """
+        Get all actors within radius of position.
+
+        Args:
+            pos: Center grid position (x, y).
+            radius: Search radius in tiles.
+            null_pos: If True, include actors at exact center position.
+
+        Returns:
+            List of actors within radius.
+        """
         mo = []
         for x in range(-radius, radius + 1):
             for y in range(-radius, radius + 1):
@@ -200,7 +252,13 @@ class Engine(object):
 
         return new_pos
 
-    def get_sc_up_pos(self):
+    def get_sc_up_pos(self) -> tuple[int, int]:
+        """
+        Get position of upward staircase on map.
+
+        Returns:
+            Position of up stairs, or random position if not found.
+        """
         y = 0
         x = 0
         pos = None
@@ -213,7 +271,13 @@ class Engine(object):
             y += 1
         return pos if pos is not None else self.map.get_random_pos()
 
-    def get_sc_down_pos(self):
+    def get_sc_down_pos(self) -> tuple[int, int]:
+        """
+        Get position of downward staircase on map.
+
+        Returns:
+            Position of down stairs, or random position if not found.
+        """
         y = 0
         x = 0
         pos = None
@@ -226,17 +290,38 @@ class Engine(object):
             y += 1
         return pos if pos is not None else self.map.get_random_pos()
 
-    def get_actor_by_id(self, id):
+    def get_actor_by_id(self, id: int) -> Actor | None:
+        """
+        Get actor by their unique ID.
+
+        Args:
+            id: The actor's ID.
+
+        Returns:
+            Actor with matching ID, or None if not found.
+        """
         for act in self.__actors:
             if act.id == id:
                 return act
+        return None
 
-    def shout(self, text):
+    def shout(self, text: str) -> None:
+        """
+        Display message to player.
+
+        Args:
+            text: Message text to display.
+        """
         self.__message_queue.insert(0, text)
         print(text)
 
-    def change_map(self, down=True):
+    def change_map(self, down: bool = True) -> None:
+        """
+        Change to different dungeon level.
 
+        Args:
+            down: If True, go down one level; if False, go up one level.
+        """
         if self.map is None:
             level = 1
         elif down:
@@ -548,9 +633,9 @@ class Engine(object):
 
         self.__c_end_friendship(attacker, victim)
 
-        vi_adress = (victim == self.player and ["you"] or ["the " + victim.name])[0]
-        at_miss_adress = (attacker == self.player and ["You miss"] or [attacker.name + " misses"])[0]
-        at_hit_adress = (attacker == self.player and ["You hit"] or ["The " + attacker.name + " hits"])[0]
+        vi_adress = ((victim == self.player and ["you"]) or ["the " + victim.name])[0]
+        at_miss_adress = ((attacker == self.player and ["You miss"]) or [attacker.name + " misses"])[0]
+        at_hit_adress = ((attacker == self.player and ["You hit"]) or ["The " + attacker.name + " hits"])[0]
         # at_kill_adress = (attacker == self.player and ["You killed"] or ["The " + attacker.name + " killed"])[0]
 
         wpn = attacker.weapon
@@ -590,55 +675,121 @@ class Engine(object):
         dam = self.do_damage(victim, damage, hit_zone, source=attacker)
         self.shout("%s %s at the %s for %i damage" % (at_hit_adress, vi_adress, z, dam))
 
-    def do_damage(self, act, dam, zone, type=D_GENERIC, source=None):
+    def do_damage(
+        self, act: Actor, dam: int, zone: str, type: int = D_GENERIC, source: Actor | None = None
+    ) -> int:
+        """
+        Apply damage to actor.
+
+        Args:
+            act: Actor receiving damage.
+            dam: Damage amount.
+            zone: Hit zone on body.
+            type: Damage type constant.
+            source: Actor causing the damage (optional).
+
+        Returns:
+            Actual damage dealt after resistances.
+        """
         return act.do_damage(dam, zone, type)
 
-    def wait_for_target(self, point_of_entry):
+    def wait_for_target(self, point_of_entry: callable) -> None:
+        """
+        Wait for player to choose a target position.
+
+        Args:
+            point_of_entry: Callback function to call with chosen position.
+        """
         self.__await_target = point_of_entry
         self.__player_actions.cursor()
 
-    def do_identify(self):
+    def do_identify(self) -> None:
+        """Start item identification mode."""
         self.__player_actions.identify()
 
-    def target_choosen(self, pos):
+    def target_choosen(self, pos: tuple[int, int]) -> None:
+        """
+        Handle target position chosen by player.
+
+        Args:
+            pos: Chosen target position (x, y).
+        """
         self.__await_target(pos)
         self.__await_target = None
 
         # self.player.fire(pos)
 
-    def get_items_at(self, pos):
+    def get_items_at(self, pos: tuple[int, int]) -> list[Item]:
+        """
+        Get all items at specific position.
+
+        Args:
+            pos: Grid position (x, y).
+
+        Returns:
+            List of items at position.
+        """
         x, y = pos
         # print(self.__item_grid[y][x])
         return [item for item in self.__item_grid[y][x] if not item.picked_up]
         # return [item for item in self.__items if item.pos() == pos]
 
-    def game_over(self):
+    def game_over(self) -> None:
+        """Handle player death and game over state."""
         print("You failed")
         self.__quit_loop = True
         self.__actors = []
 
-    def redraw_map(self):
+    def redraw_map(self) -> None:
+        """Mark map for redraw."""
         self.map.cur_surf = None
 
-    def redraw_stats(self):
+    def redraw_stats(self) -> None:
+        """Mark stats display for redraw."""
         self.__cur_stat_surf = None
 
-    def add_to_world_objects(self, obj):
+    def add_to_world_objects(self, obj: object) -> None:
+        """
+        Add object to world tracking.
+
+        Args:
+            obj: Object to track.
+        """
         self.__world_objects[obj] = True
 
-    def add_actor(self, actor, add=True):
+    def add_actor(self, actor: Actor, add: bool = True) -> None:
+        """
+        Add actor to game world.
+
+        Args:
+            actor: Actor to add.
+            add: If True, add to world objects tracking.
+        """
         if add:
             self.__actors.append(actor)
         if self.map is not None:
             actor.sc = sc(self.map.map_array)
         self.__world_objects[actor] = True
 
-    def add_item(self, item, add=True):
+    def add_item(self, item: Item, add: bool = True) -> None:
+        """
+        Add item to game world.
+
+        Args:
+            item: Item to add.
+            add: If True, add to world objects tracking.
+        """
         if add:
             self.__items.append(item)
         self.__world_objects[item] = True
 
-    def del_actor(self, actor):
+    def del_actor(self, actor: Actor) -> None:
+        """
+        Remove actor from game world.
+
+        Args:
+            actor: Actor to remove.
+        """
         if actor in self.__actors:
             self.__actors.remove(actor)
         if actor in self.__actors_on_screen:
@@ -647,7 +798,13 @@ class Engine(object):
         if actor in self.__actor_grid[y][x]:
             self.__actor_grid[y][x].remove(actor)
 
-    def del_item(self, item):
+    def del_item(self, item: Item) -> None:
+        """
+        Remove item from game world.
+
+        Args:
+            item: Item to remove.
+        """
         if item in self.__items:
             self.__items.remove(item)
         x, y = item.pos()
@@ -656,10 +813,22 @@ class Engine(object):
         # if item.player_symbol is not None:
         #    self.free_symbol(item.player_symbol)
 
-    def get_id(self):
+    def get_id(self) -> int:
+        """
+        Get next unique ID for game objects.
+
+        Returns:
+            Next available unique ID.
+        """
         return next(self.__id_gen)
 
-    def drawGFX(self, gfx):
+    def drawGFX(self, gfx: GFX) -> None:
+        """
+        Register graphics effect for rendering.
+
+        Args:
+            gfx: Graphics effect to display.
+        """
         self.__gfx = gfx
         self.state = S_GFX
 
@@ -794,7 +963,7 @@ class Engine(object):
             if not self.player.dazzled:
                 for item in self.__items:
                     if not item.picked_up and (
-                        self.player.sc.lit(item.x, item.y) or self.player.x == item.x and self.player.y == item.y
+                        self.player.sc.lit(item.x, item.y) or (self.player.x == item.x and self.player.y == item.y)
                     ):
                         try:
                             self.screen.blit(
@@ -809,7 +978,7 @@ class Engine(object):
                             print(f"Bare exception caught as {e}\n{item.name}, {item.pos()} is invalid!!!!")
 
             for act in self.__actors:
-                if act == self.player or self.player.sc.lit(act.x, act.y) and not self.player.dazzled:
+                if act == self.player or (self.player.sc.lit(act.x, act.y) and not self.player.dazzled):
                     try:
                         self.screen.blit(
                             self.__get_actor_surface(act),
@@ -820,9 +989,8 @@ class Engine(object):
                     except Exception as e:
                         print(sys.exc_info())
                         print(f"Bare exception caught as {e}\n{act.name}, {act.pos()} is invalid!!!!")
-                else:
-                    if act in self.__actors_on_screen:
-                        self.__actors_on_screen.remove(act)
+                elif act in self.__actors_on_screen:
+                    self.__actors_on_screen.remove(act)
 
             if self.state == S_PLAYER_CURSOR:
                 self.screen.blit(
@@ -1133,7 +1301,7 @@ class Engine(object):
         self.__actors.remove(self.player)
         data = self.map, self.__actors, self.__items, self.player.pos()
         if os.access("MAP%i.gz" % (self.map.level), os.F_OK):
-            os.remove("MAP%i.gz" % (self.map.level))
+            pathlib.Path("MAP%i.gz" % (self.map.level)).unlink()
         FILE = gzip.open("MAP%i.gz" % (self.map.level), "w")
         pickle.dump(data, FILE, 2)
         FILE.close()

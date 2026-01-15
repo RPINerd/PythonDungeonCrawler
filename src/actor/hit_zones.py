@@ -1,34 +1,48 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 from pdcglobal import L_ABDOMEN, L_ARMS, L_CHEST, L_HEAD, L_LEGS, d
 
+if TYPE_CHECKING:
+    from actor.actor import Actor
 
-def leg(tot):
+
+def leg(tot: int) -> int:
+    """Calculate hit points for leg zone."""
     tot += 4
-    return tot / 5
+    return tot // 5
 
 
-def head(tot):
+def head(tot: int) -> int:
+    """Calculate hit points for head zone."""
     tot += 4
-    return tot / 5
+    return tot // 5
 
 
-def arm(tot):
+def arm(tot: int) -> int:
+    """Calculate hit points for arm zone."""
     tot += 4
-    v = tot / 5 - 1
+    v = tot // 5 - 1
     return max(v, 1)
 
 
-def chest(tot):
+def chest(tot: int) -> int:
+    """Calculate hit points for chest zone."""
     tot += 4
-    return tot / 5 + 2
+    return tot // 5 + 2
 
 
-def abdomen(tot):
+def abdomen(tot: int) -> int:
+    """Calculate hit points for abdomen zone."""
     tot += 4
-    return tot / 5 + 1
+    return tot // 5 + 1
 
 
-class HitZones(object):
-    def __init__(self, host):
+class HitZones:
+    """Manages locational hit points for an actor."""
+
+    def __init__(self, host: Actor) -> None:
 
         tot = host.SIZ + host.CON
 
@@ -49,7 +63,8 @@ class HitZones(object):
         self.__dict__["zones"] = zones
         self.__dict__["host"] = host
 
-    def get_random_zone(self):
+    def get_random_zone(self) -> str:
+        """Get a random hit zone based on d20 roll."""
         z = d(20)
         if z <= 3:
             return "R_Leg"
@@ -65,15 +80,19 @@ class HitZones(object):
             return "L_Arm"
         return "Head"
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
+        """Return state for pickling."""
         return self.__dict__
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        """Restore state from pickling."""
         for item in state:
             self.__dict__[item] = state[item]
 
-    def __getattr__(self, attr):
+    def __getattr__(self, attr: str) -> Any:
+        """Get attribute dynamically."""
         return self.__dict__[attr]
 
-    def __setattr__(self, attr, value):
+    def __setattr__(self, attr: str, value: Any) -> None:
+        """Set attribute dynamically."""
         self.__dict__[attr] = value

@@ -1,14 +1,34 @@
-# -*- coding: iso-8859-15 -*-
+"""
+Binary Space Partitioning dungeon generation algorithm.
+
+This module implements a BSP-based dungeon generator that recursively
+splits rooms and connects them with corridors.
+"""
+
+from __future__ import annotations
+
 import random
 
 VERTICAL = 0
 HORIZONTAL = 1
 
 
-class Room(object):
-    def __init__(self, x, y, w, h):
-        self.childs = None
-        self.sibling = None
+class Room:
+
+    """Represents a room or space in the dungeon BSP tree."""
+
+    def __init__(self, x: int, y: int, w: int, h: int) -> None:
+        """
+        Initialize a room with position and dimensions.
+
+        Args:
+            x: Left x coordinate.
+            y: Top y coordinate.
+            w: Right x coordinate (width boundary).
+            h: Bottom y coordinate (height boundary).
+        """
+        self.childs: list[Room] | None = None
+        self.sibling: Room | None = None
         self.x = x
         self.y = y
         self.w = w
@@ -24,12 +44,19 @@ class Room(object):
         while self.rw - self.rx < 3:
             self.rw += 1
 
-        self.split = None
-        self.parent = None
+        self.split: int | None = None
+        self.parent: Room | None = None
         self.corridor = False
 
 
-def split_room(room, vertical):
+def split_room(room: Room, vertical: bool) -> None:
+    """
+    Split a room into two child rooms.
+
+    Args:
+        room: The room to split.
+        vertical: If True, split vertically; if False, split horizontally.
+    """
     # if room.parent is not None:
     #    if room.parent.parent is not None:
     #        if random.randint(0, 100) < 10:
@@ -52,7 +79,14 @@ def split_room(room, vertical):
     room2.sibling = room1
 
 
-def split(room, count):
+def split(room: Room, count: int) -> None:
+    """
+    Recursively split room into smaller rooms.
+
+    Args:
+        room: The root room to split.
+        count: Number of split iterations to perform.
+    """
     rooms = [room]
     for _ in range(count):
         new = []
@@ -68,7 +102,15 @@ def split(room, count):
         rooms.extend(new)
 
 
-def connect_rooms(rooms, map_array, sy="*"):
+def connect_rooms(rooms: list[Room], map_array: list[list[str]], sy: str = "*") -> None:
+    """
+    Connect rooms with corridors.
+
+    Args:
+        rooms: List of rooms to connect.
+        map_array: 2D map array to draw corridors on.
+        sy: Symbol character to use for corridors.
+    """
     for r in rooms:
         # if r==None: return
         # if r.parent==None:continue
@@ -165,7 +207,6 @@ def create(room):
     connect_rooms(rooms, map_array)
     parents = set()
     [parents.add(r.parent) for r in rooms]
-    #
     while len(parents) > 1:
         connect_rooms(parents, map_array)
         new = set()

@@ -1,3 +1,11 @@
+"""Projectile graphics for ranged attacks."""
+
+from __future__ import annotations
+
+from collections.abc import Generator
+
+import pygame
+
 from pdcglobal import (
     MOVE_DOWN,
     MOVE_DOWN_LEFT,
@@ -17,9 +25,11 @@ from .gfx import GFX
 
 class ProjectileFX(GFX):
 
-    rescache = None
+    """Graphics for projectiles in flight."""
 
-    def __init__(self, dir, s_pos, t_pos, type="Arrow"):
+    rescache: Res | None = None
+
+    def __init__(self, dir: int, s_pos: tuple[int, int], t_pos: tuple[int, int], type: str = "Arrow") -> None:
         GFX.__init__(self)
 
         if ProjectileFX.rescache is None:
@@ -44,12 +54,13 @@ class ProjectileFX(GFX):
         if dir == MOVE_UP_LEFT:
             img += 7
 
-        self.image = self.rescache.get(img)
+        self.image: pygame.Surface = self.rescache.get(img)
 
-        self.__pos_gen = self.__pos(s_pos, t_pos)
-        self.redraw = True
+        self.__pos_gen: Generator[tuple[int, int]] = self.__pos(s_pos, t_pos)
+        self.redraw: bool = True
 
-    def __pos(self, s_pos, t_pos):
+    def __pos(self, s_pos: tuple[int, int], t_pos: tuple[int, int]) -> Generator[tuple[int, int]]:
+        """Generator yielding positions along projectile path."""
         s_real = (
             s_pos[0] * TILESIZE - self.game.camera.x * TILESIZE,
             s_pos[1] * TILESIZE - self.game.camera.y * TILESIZE,
@@ -62,10 +73,11 @@ class ProjectileFX(GFX):
         for pos in all:
             yield pos
 
-    def get_surf(self):
+    def get_surf(self) -> pygame.Surface:
+        """Get the projectile surface."""
         return self.image
 
-    def pos(self):
+    def pos(self) -> tuple[int, int] | None:
         try:
             pos = self.__pos_gen.next()
             return pos
